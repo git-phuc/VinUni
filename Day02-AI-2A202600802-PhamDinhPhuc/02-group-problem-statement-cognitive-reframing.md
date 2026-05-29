@@ -36,15 +36,21 @@ Nhóm chọn candidate này vì nó có actor rõ, workflow rõ, bottleneck rõ 
 
 | # | Người đưa ra | Candidate problem | Người gặp vấn đề | Bottleneck | Ghi chú |
 |---|---|---|---|---|---|
-| 1 | Phúc | Cognitive reframing khi nhận feedback tiêu cực | Sinh viên | Cá nhân hóa feedback thành "mình kém" | Candidate nhóm chốt |
-| 2 |  |  |  |  |  |
-| 3 |  |  |  |  |  |
-| 4 |  |  |  |  |  |
-| 5 |  |  |  |  |  |
-| 6 |  |  |  |  |  |
-| 7 |  |  |  |  |  |
-| 8 |  |  |  |  |  |
-| 9 |  |  |  |  |  |
+| 1 | Cung | Tổng hợp tài liệu ôn thi | Sinh viên trước kỳ thi | Tài liệu nằm rải rác ở slide, note, Discord/Zalo | Utility problem; dễ thành search/summarization |
+| 2 | Anh | Tìm lại thông tin Discord/Zalo | Sinh viên trong lớp/CLB | Tin nhắn trôi, keyword nhớ không chính xác | Retrieval rõ nhưng không thuộc Empathy |
+| 3 | Kiên | Theo dõi deadline môn học | Sinh viên nhiều môn | Deadline phân tán ở LMS, Discord, calendar | Có thể giải bằng reminder/calendar |
+| 4 | Dũng | Tìm quán ăn phù hợp ngân sách | Sinh viên quanh trường | Budget, khẩu vị, khoảng cách thay đổi theo ngày | Recommendation problem, impact học tập thấp |
+| 5 | Cung | Tìm tuyến đường tối ưu đến trường | Sinh viên đi học bằng xe/bus | Delay/traffic, chuyển tuyến | Data phụ thuộc bản đồ, không phải problem lớp |
+| 6 | Anh | Tìm phòng trọ gần trường | Sinh viên cần thuê nhà | Thông tin phòng không minh bạch, cập nhật nhanh | Rộng, cần dữ liệu thị trường thật |
+| 7 | Phúc | Kiến thức AI quá nhiều và tốc độ học quá nhanh | Người mới học AI/AI20K | Overload, không biết ưu tiên học gì | Pain thật nhưng scope rất rộng |
+| 8 | Kiên | Khó cân bằng giữa việc học ở trường đại học và AI20K | Sinh viên học song song | Lịch học, bài tập và tự học cạnh tranh thời gian | Gần productivity/coaching dài hạn |
+| 9 | Dũng | Lớp học đông, trợ giảng không đủ hỗ trợ | Học viên và TA | Câu hỏi lặp lại, TA quá tải | Problem hệ thống, actor chính có thể là TA |
+| 10 | Cung | Copy-paste Excel vào CMS | Người nhập liệu/admin | Format bảng bị vỡ, thao tác lặp lại | Operational automation |
+| 11 | Anh | Sửa định dạng/dấu cách Excel | Người làm file dữ liệu | Dữ liệu không sạch, spacing lỗi | Rule/process fix có thể là đủ |
+| 12 | Kiên | Gắn Tags cho thanh Search | Người quản trị nội dung | Thiếu taxonomy/tag chuẩn | Information architecture, không thuộc Empathy |
+| 13 | Phúc | Cognitive reframing khi nhận feedback tiêu cực | Sinh viên nhận feedback/điểm thấp | Cá nhân hóa feedback thành "mình kém" | Candidate nhóm chốt |
+| 14 | Phúc | Reframing tin nhắn mơ hồ để giảm overthinking | Sinh viên/người trẻ nhắn tin | AI dễ đoán ý định người gửi thay người dùng | Gần Empathy nhưng boundary rủi ro |
+| 15 | Phúc | Cognitive reframing cho deadline panic thành bước hành động nhỏ | Sinh viên sát deadline | Panic làm tê liệt, không chia nhỏ được việc | Gần topic chốt nhưng dễ thành task planner |
 
 ### Vì sao chọn candidate này
 
@@ -56,13 +62,25 @@ Nhóm chọn candidate này vì nó có actor rõ, workflow rõ, bottleneck rõ 
 5. AI intervention nằm ở một bước rõ: hỗ trợ self-reflection và cognitive reframing, không thay người dùng quyết định.
 ```
 
+Đoạn pitch lý do chọn đề tài của Phúc so với các đề tài khác:
+
+```text
+Trong 15 candidate của nhóm, nhiều vấn đề rất thực tế nhưng thiên về utility/search/reminder như tìm tài liệu ôn thi, tìm tin nhắn Discord/Zalo, theo dõi deadline, tìm quán ăn, tìm tuyến đường hoặc tìm phòng trọ. Các vấn đề này có workflow rõ, nhưng ít chạm tới domain Empathy và thường có thể giải bằng search, filter, reminder hoặc recommendation system tương đối quen thuộc. Một số vấn đề khác như kiến thức AI quá nhiều, cân bằng đại học với AI20K, hoặc lớp đông thiếu TA có impact lớn hơn, nhưng scope rộng, nhiều stakeholder và khó làm thành một AI workflow nhỏ trong thời gian lab.
+
+Candidate "Cognitive reframing khi nhận feedback tiêu cực" được chọn vì nằm ở điểm giữa tốt nhất: pain đủ cá nhân và dễ đồng cảm, input đủ cụ thể là feedback/điểm/comment thật, workflow hiện tại dễ vẽ, bottleneck rõ ở bước diễn giải feedback, và AI có thể can thiệp đúng một đoạn nhỏ bằng self-reflection + cognitive reframing + action items. So với reframing tin nhắn mơ hồ, đề tài này an toàn hơn vì AI không cần đoán ý định người khác. So với deadline panic, đề tài này ít bị trượt thành task planner hơn vì trọng tâm vẫn là Empathy và cách sinh viên diễn giải feedback về bản thân.
+```
+
 ### Vì sao không chọn các candidate khác
 
 | Candidate | Lý do chưa chọn |
 |---|---|
-| Reframing tin nhắn mơ hồ | Dễ trượt sang việc AI đoán ý định người gửi, boundary khó hơn |
-| Cognitive reframing cho deadline panic | Dễ biến thành productivity/task planner, mất trọng tâm Empathy |
-| Candidate khác của nhóm | Điền sau khi nghe nhóm pitch |
+| Tìm tài liệu ôn thi / tìm lại thông tin Discord/Zalo | Rất thực tế nhưng chủ yếu là retrieval/search problem, không thể hiện rõ domain Empathy |
+| Theo dõi deadline / tìm tuyến đường / tìm quán ăn / tìm phòng trọ | Có thể giải bằng reminder, map, filter hoặc recommendation; AI không phải điểm can thiệp bắt buộc |
+| Kiến thức AI quá nhiều / cân bằng đại học và AI20K | Pain lớn nhưng scope rộng, dễ thành coaching system dài hạn hoặc productivity app |
+| Lớp học đông, trợ giảng không đủ hỗ trợ | Impact cao nhưng actor và quyền can thiệp nghiêng về TA/giảng viên/hệ thống lớp học hơn là một workflow cá nhân |
+| Copy-paste Excel vào CMS / sửa định dạng Excel / gắn tags cho search | Workflow rõ nhưng thiên về operational automation hoặc information architecture, ít liên quan tới Empathy |
+| Reframing tin nhắn mơ hồ | Gần Empathy nhưng AI dễ đoán ý định người gửi, boundary xã hội nhạy cảm hơn |
+| Cognitive reframing cho deadline panic | Cũng gần topic chốt, nhưng dễ biến thành task planner; feedback tiêu cực có input cụ thể hơn để AI bám vào |
 
 Nếu có disagreement:
 
@@ -99,21 +117,22 @@ Mục tiêu không phải chứng minh solution hay, mà kiểm tra pain có th�
 
 ### Bảng validation notes
 
+Ghi chú: bảng dưới đây là **draft/synthetic notes** để nhóm chuẩn bị pitch và đi hỏi nhanh. Khi có câu trả lời thật, nhóm nên thay bằng lời người được hỏi.
+
 | Người được hỏi | Có gặp problem không? | Workflow hiện tại | Bottleneck | Insight |
 |---|---|---|---|---|
-| Phúc | Có / Chưa chắc | Nhận feedback → hụt mood → đọc lướt → nghĩ tiêu cực → để sau mới sửa | Cá nhân hóa feedback | Đây là lý do chọn problem để pitch |
-| Người 2 |  |  |  |  |
-| Người 3 |  |  |  |  |
-| Người 4 |  |  |  |  |
-| Người 5 |  |  |  |  |
+| Phúc | Có | Nhận feedback → hụt mood → nhìn điểm/comment trước → tự nghĩ "mình kém" → để sau mới sửa | Cá nhân hóa feedback thành đánh giá bản thân | Pain mạnh nhất nằm ở 10-20 phút đầu sau khi nhận feedback; cần reframe trước khi né feedback |
+| Cung | Có một phần | Đọc comment → thấy khó chịu → hỏi bạn xem feedback có quá nặng không → sau đó mới quay lại sửa | Cần một người phản chiếu để bớt diễn giải quá tiêu cực | Tool có ích nếu AI hỏi ngắn, không phán xét, không an ủi sáo rỗng |
+| Anh | Có | Nhận feedback ngắn/cứng → nghĩ TA/giảng viên không thích bài mình → mất động lực sửa | Trộn lẫn fact trong feedback với assumption về ý định người feedback | AI nên tách fact/thought/feeling, nhưng không được đoán ý định người khác |
+| Kiên | Có | Thấy điểm thấp → panic → mở nhiều tài liệu cùng lúc → không biết sửa phần nào trước | Không chuyển feedback thành next step cụ thể | Action items là giá trị chính; reframe chỉ có ích nếu dẫn tới bước sửa nhỏ |
+| Dũng | Chưa chắc / có nhẹ | Vẫn đọc feedback nhưng dễ defensive nếu comment quá trực diện → chỉ nhớ câu tiêu cực nhất | Phản ứng tự vệ làm bỏ qua phần feedback đúng | Problem không nặng với tất cả mọi người; target nên là sinh viên dễ self-critical hoặc nhận feedback phê bình mạnh |
 
 ### Validation takeaway
 
 ```text
-Điền sau khi hỏi đủ 5 người.
+Draft signal: 4/5 người nhận ra tình huống nhận feedback tiêu cực; 3-4/5 có biểu hiện cá nhân hóa feedback, né đọc kỹ hoặc bị kẹt ở cảm xúc ban đầu; 3/5 nói action items cụ thể sẽ hữu ích hơn lời an ủi chung chung. Tín hiệu này ủng hộ việc chọn candidate #13, nhưng nhóm vẫn cần xác nhận bằng hỏi nhanh thật.
 
-Nếu đa số nói từng né feedback hoặc từng cá nhân hóa feedback, problem được validate tốt hơn.
-Nếu đa số đọc feedback và sửa ngay, nhóm cần thu hẹp actor: sinh viên dễ self-criticize, sinh viên mới học môn khó, hoặc sinh viên nhận feedback phê bình mạnh.
+Nếu validation thật cho kết quả tương tự, problem nên Go cho lab prototype. Nếu đa số đọc feedback và sửa ngay, nhóm cần thu hẹp actor: sinh viên dễ self-critical, sinh viên mới học môn khó, hoặc sinh viên nhận feedback phê bình mạnh.
 ```
 
 ---
@@ -284,13 +303,13 @@ Workflow đủ vì các bước can thiệp rõ: hỏi gợi mở, tách fact/th
 Decision hiện tại:
 
 ```text
-Not Yet → cần validation 5 người và research thêm pattern/tool tương tự.
+Go for lab prototype → chọn candidate #13 làm problem statement nhóm.
 ```
 
 Lý do:
 
 ```text
-Problem có actor, workflow, bottleneck và boundary rõ. Tuy nhiên trước khi Go, nhóm cần validate pain với 5 người và kiểm tra liệu non-AI reflection template đã đủ chưa. Nếu AI chỉ an ủi chung chung, solution không đáng làm.
+Problem có actor, workflow, bottleneck, impact, success metric và boundary rõ. Trong candidate pool của nhóm, đây là đề tài vừa bám domain Empathy/Cognitive Reframing, vừa đủ cụ thể để thiết kế AI Workflow nhỏ. Nhóm vẫn cần hỏi nhanh 5 người để củng cố evidence, nhưng hướng hiện tại đủ tốt để dùng làm problem statement v0.
 ```
 
 Nếu Go, pilot nhỏ nhất:
@@ -303,7 +322,7 @@ Nếu Go, pilot nhỏ nhất:
 5. Người dùng đánh giá: câu reframe có đúng không, action items có dùng được không.
 ```
 
-Nếu Not Yet, cần validate:
+Nếu validation không đủ, cần kiểm tra lại:
 
 ```text
 - Có bao nhiêu người thật sự cá nhân hóa feedback?
