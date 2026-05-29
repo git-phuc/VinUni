@@ -13,7 +13,6 @@ Selected problem: Cognitive reframing khi sinh viên nhận feedback tiêu cực
 
 | Folder | Nội dung |
 |---|---|
-| [01-individual-problem-scan](./01-individual-problem-scan/README.md) | Individual problem scan và top problem cards |
-| [02-group-problem-statement](./02-group-problem-statement/README.md) | Group convergence, validation, research, workflow và problem statement |
-| [03-individual-reflection](./03-individual-reflection/README.md) | Individual reflection notes |
-
+| [01-individual-problem-scan.md](./01-individual-problem-scan.md) | Individual problem scan và top problem cards |
+| [02-group-problem-statement.md](./02-group-problem-statement.md) | Group convergence, validation, research, workflow và problem statement |
+| [03-individual-reflection.md](./03-individual-reflection.md) | Individual reflection |
