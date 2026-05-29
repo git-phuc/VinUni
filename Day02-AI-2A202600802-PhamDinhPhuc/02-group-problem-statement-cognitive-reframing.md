@@ -120,21 +120,28 @@ Nếu đa số đọc feedback và sửa ngay, nhóm cần thu hẹp actor: sinh
 
 ## 3. Research giải pháp / pattern đã có
 
-Phần này nhóm cần bổ sung link nguồn sau khi research. Trước mắt có thể research theo 3 nhóm pattern:
+Phần này nhóm dùng cả pattern thực hành và paper gần đây từ ACL Anthology để tránh nghĩ trong chân không. Vì các paper dưới đây nằm gần vùng mental health/psychotherapy, nhóm chỉ lấy bài học về **cognitive reframing workflow**, không mở rộng scope thành trị liệu.
 
 | Pattern / tool type | Cần tìm gì? | Bài học kéo về problem nhóm |
 |---|---|---|
 | CBT-style thought record / cognitive reframing worksheet | Cách tách situation, thought, emotion, evidence, alternative thought | Non-AI alternative có thể là form cố định |
 | AI journaling / self-reflection tools | Cách AI hỏi câu gợi mở và phản hồi theo ngữ cảnh | AI có thể hữu ích ở bước ngôn ngữ và empathy |
 | Learning feedback / formative assessment tools | Cách feedback được chuyển thành next steps | Action items phải gắn với feedback thật, không chỉ an ủi |
+| ACL research on cognitive reframing | LM/LLM hỗ trợ reframe negative thoughts như thế nào | Reframe tốt cần empathy + specificity, không chỉ chuyển tiêu cực thành tích cực |
 
 Research notes:
 
 | Nguồn / tool / case | Link | Họ giải quyết phần nào? | Khoảng trống / rủi ro | Bài học cho nhóm |
 |---|---|---|---|---|
+| Sharma et al., ACL 2023 — *Cognitive Reframing of Negative Thoughts through Human-Language Model Interaction* | https://aclanthology.org/2023.acl-long.555/ | Nghiên cứu human-LM interaction để tạo reframed thoughts; xây framework thuộc tính ngôn ngữ cho reframe; có field study lớn với người dùng thật | Bối cảnh là negative thoughts/mental health, nhạy cảm hơn bài học tập của nhóm | Reframe không nên chỉ "positive hóa"; người dùng thích reframe có empathy và cụ thể. Điều này củng cố boundary: AI phải hỏi rõ context và tạo action items gắn với feedback thật |
+| Xiao et al., ACL 2024 — *HealMe: Harnessing Cognitive Reframing in Large Language Models for Psychotherapy* | https://aclanthology.org/2024.acl-long.93/ | Đề xuất LLM workflow cho cognitive reframing, nhấn mạnh empathetic dialogue và giúp người dùng tìm góc nhìn cân bằng hơn | Paper hướng tới psychotherapy nên scope/risk cao hơn nhiều; nhóm không claim làm trị liệu | Lấy pattern "empathetic dialogue + balanced perspective", nhưng hạ scope xuống academic feedback: AI guide reflection, sinh viên tự chọn/sửa reframe |
 |  |  |  |  |  |
-|  |  |  |  |  |
-|  |  |  |  |  |
+
+Research takeaway:
+
+```text
+Hai paper ACL gần đây ủng hộ hướng dùng LM/LLM để hỗ trợ cognitive reframing, nhưng cũng cho thấy rủi ro nếu AI chỉ an ủi chung chung hoặc đi quá gần psychotherapy. Với bài toán nhóm, hướng hợp lý là Workflow nhỏ: AI hỏi gợi mở, tách fact/thought/feeling, gợi ý reframe cụ thể và action items; người dùng vẫn kiểm tra và quyết định.
+```
 
 ---
 
