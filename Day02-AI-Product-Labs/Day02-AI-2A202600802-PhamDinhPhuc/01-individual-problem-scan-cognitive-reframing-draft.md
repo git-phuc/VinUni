@@ -1,4 +1,4 @@
-x# 01 — Individual Problem Scan
+# 01 — Individual Problem Scan
 
 ## Domain
 
