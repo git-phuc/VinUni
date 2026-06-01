@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Day03 - Chatbot vs ReAct Agent</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">ViClinDocAgent Lab 3</p>
+        <h1>Chatbot vs ReAct Agent</h1>
+        <div class="code-map" aria-label="Day03 code map">
+          <span>src/chatbot</span>
+          <span>src/agent</span>
+          <span>src/mix</span>
+        </div>
+      </div>
+      <div class="status-strip">
+        <button id="toggleSidebarBtn" class="ghost-btn" type="button">Thu panel</button>
+        <span id="modelBadge" class="badge">Model: checking...</span>
+        <span id="keyBadge" class="badge badge--warn">API key: checking...</span>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Controls">
+        <section class="panel">
+          <div class="section-title">
+            <h2>Mode</h2>
+            <span class="badge">DB session</span>
+          </div>
+          <div class="mode-switcher" role="tablist" aria-label="Mode selector">
+            <button class="mode-card is-active" data-mode="chatbot" type="button">
+              <strong>Chatbot</strong>
+              <span>1 LLM call</span>
+            </button>
+            <button class="mode-card" data-mode="agent" type="button">
+              <strong>Agent</strong>
+              <span>Tools + trace</span>
+            </button>
+            <button class="mode-card" data-mode="mix" type="button">
+              <strong>Mix</strong>
+              <span>Compare both</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>Phiên làm việc</h2>
+          </div>
+          <label class="field-label" for="sessionTitle">Tiêu đề phiên</label>
+          <input id="sessionTitle" class="text-input" placeholder="Ví dụ: Ca ho kéo dài, cần SOAP note" />
+
+          <label class="field-label" for="rawNote">Raw clinical note</label>
+          <textarea
+            id="rawNote"
+            spellcheck="false"
+            placeholder="Dán raw note tiếng Việt tại đây. Demo này không tự hiện ca mẫu để dùng được với người dùng thật."
+          ></textarea>
+
+          <div class="case-info">
+            <strong>Doctor-in-the-loop</strong>
+            <p>Output chỉ là bản nháp documentation. Bác sĩ/chuyên gia phải duyệt trước khi coi là bản cuối.</p>
+          </div>
+
+          <button id="runModeBtn" class="run-btn" type="button">Chạy Chatbot</button>
+          <div id="errorBox" class="error-box" hidden></div>
+        </section>
+
+        <section class="panel history-panel">
+          <div class="section-title">
+            <h2>Database Sessions</h2>
+            <button id="newSessionBtn" class="ghost-btn" type="button">New</button>
+          </div>
+          <div id="sessionList" class="history-list"></div>
+        </section>
+      </aside>
+
+      <section class="main-stage" aria-label="Mode workspace">
+        <div class="stage-header">
+          <div>
+            <p id="modeKicker" class="eyebrow">Chatbot baseline</p>
+            <h2 id="modeTitle">Raw note → Prompt → LLM → SOAP</h2>
+          </div>
+          <span id="modeStatusBadge" class="badge">Ready</span>
+        </div>
+
+        <section class="panel finalization-panel">
+          <div class="section-title">
+            <h2>Doctor / Expert Finalization Chat</h2>
+            <span class="badge badge--warn">Draft until approved</span>
+          </div>
+          <div class="finalization-grid">
+            <div>
+              <div id="chatMessages" class="chat-messages"></div>
+              <label class="field-label" for="doctorMessage">Trao đổi với agent</label>
+              <textarea
+                id="doctorMessage"
+                class="doctor-textarea"
+                placeholder="Ví dụ: Bác sĩ xác nhận không sốt, SpO2 98%, hãy cập nhật SOAP và nhắc điểm cần theo dõi."
+              ></textarea>
+              <button id="sendDoctorMessageBtn" class="run-btn secondary-run" type="button">Gửi cho Agent</button>
+            </div>
+            <div>
+              <label class="field-label" for="finalDraft">Bản nháp cuối</label>
+              <div id="finalDraft" class="final-draft empty">Chưa có bản nháp cuối. Hãy chat với agent sau khi chạy chatbot/agent.</div>
+              <button id="saveFinalBtn" class="ghost-btn save-final-btn" type="button">Lưu bản cuối đã duyệt</button>
+            </div>
+          </div>
+        </section>
+
+        <details id="outputDetails" class="output-details">
+          <summary>
+            <span>Kết quả tĩnh gần nhất</span>
+            <small>SOAP, warnings, score và so sánh khi cần xem lại</small>
+          </summary>
+          <div class="stage-grid">
+            <section id="chatbotView" class="mode-view panel">
+              <div class="section-title">
+                <h2>Chatbot Output</h2>
+                <span id="chatbotScore" class="badge">Score: -</span>
+              </div>
+              <div id="chatbotMeta" class="result-meta"></div>
+              <div id="chatbotResult" class="result-box empty">Chưa chạy chatbot.</div>
+            </section>
+
+            <section id="agentView" class="mode-view panel" hidden>
+              <div class="section-title">
+                <h2>Agent Output</h2>
+                <span id="agentScore" class="badge">Score: -</span>
+              </div>
+              <div id="agentMeta" class="result-meta"></div>
+              <div id="agentResult" class="result-box empty">Chưa chạy agent.</div>
+            </section>
+
+            <section id="mixView" class="mode-view panel" hidden>
+              <div class="section-title">
+                <h2>Mixed Comparison</h2>
+                <span id="winnerBadge" class="badge">Winner: -</span>
+              </div>
+              <div id="comparisonBox" class="comparison-box empty">Chưa có kết quả compare.</div>
+              <div class="compare-columns">
+                <div>
+                  <div class="result-heading">
+                    <h3>Chatbot</h3>
+                    <span id="mixChatbotScore" class="badge">Score: -</span>
+                  </div>
+                  <div id="mixChatbotResult" class="result-box compact empty">Chưa có output.</div>
+                </div>
+                <div>
+                  <div class="result-heading">
+                    <h3>Agent</h3>
+                    <span id="mixAgentScore" class="badge">Score: -</span>
+                  </div>
+                  <div id="mixAgentResult" class="result-box compact empty">Chưa có output.</div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
