@@ -1,140 +1,109 @@
-# Implementation Guide
+# Guide
 
-## 1. Lab Context
+## 1. Start With The Baseline
 
-TravelBuddy wants a lightweight travel assistant that can use tools instead of relying only on free-form model responses. The assistant should check flight options, estimate whether the budget still works, and look for hotels that fit the remaining nightly budget.
+Run the weak baseline first:
 
-This lab uses a prebuilt agent pattern with `create_agent` rather than a custom multi-node workflow. The emphasis is on tool design, prompting, and grounded answers.
+```bash
+python grade/scoring.py --module simple_solution.agent.graph --provider google
+```
 
-## 2. Requirements
+This gives you the starting score. Your job is to improve `src/` and beat it.
 
-Your implementation must:
+## 2. Understand The Task
 
-- use `create_agent`
-- define exactly three tools:
-  - `search_flights`
-  - `calculate_budget`
-  - `search_hotels`
-- answer in Vietnamese
-- ask for clarification when key trip information is missing
-- refuse unsafe or illegal requests
-- use tool outputs as the source of truth for prices and recommendations
+The agent should handle four behaviors:
 
-## 3. Expected Outcome
+- valid order creation
+- clarification when customer info is missing
+- refusal when the request breaks policy
+- grounded confirmation after a successful save
 
-By the end of the lab, you should have a working agent that can:
+For a valid order, the intended tool flow is:
 
-- receive a natural-language travel request
-- call the right tools in the right order
-- produce a concise final recommendation
-- handle normal, ambiguous, unsafe, and budget-constrained requests
+1. `list_products`
+2. `get_product_details`
+3. `get_discount`
+4. `calculate_order_totals`
+5. `save_order`
 
-## 4. Files You Will Work With
+## 3. Where To Work
 
-- `src/agent/graph.py`: main lab scaffold
-- `src/utils/data_store.py`: mock flight and hotel search helpers
-- `src/core/llm.py`: model helpers and optional LLM-judge support
-- `src/core/schemas.py`: minimal result schema
-- `data/flights.json`
-- `data/hotels.json`
+Focus on:
+
+- `src/agent/graph.py`
+- `src/utils/data_store.py`
+
+Useful references:
+
 - `data/graded_cases.json`
-- `grade/scoring.py`
+- `data/expected_orders/`
+- `simple_solution/`
 
-## 5. Recommended Build Order
+## 4. What To Improve
 
-### Step 1: Build the system prompt
+### Prompt
 
-Implement `build_system_prompt(...)`.
+Your system prompt should make these rules explicit:
 
-The prompt should instruct the agent to:
+- answer in Vietnamese
+- do not invent product facts, discounts, totals, or file paths
+- ask for missing customer fields before any tool call
+- refuse unsafe requests without calling tools
+- follow the expected tool order
+- save only after validation succeeds
 
-- ask for missing trip details before using tools
-- refuse unsafe or illegal requests
-- use the tools in this order when information is available:
-  1. `search_flights`
-  2. `calculate_budget`
-  3. `search_hotels`
-- avoid inventing prices or availability
-- return a short final answer in Vietnamese
+### Tool Schema
 
-### Step 2: Define the tools
+Good tool schema reduces agent mistakes. Prefer:
 
-Implement `build_tools(store)`.
+- clear tool names
+- clear docstrings
+- explicit required arguments
+- structured inputs that match the workflow
 
-Each tool should have:
+### Guardrails
 
-- a clear name
-- a useful docstring
-- explicit arguments
-- compact output that the model can reuse in the final answer
+The agent should refuse requests that ask to:
 
-Recommended behavior:
+- bypass stock
+- force fake discounts
+- create fake invoices
+- ignore the catalog or policy
 
-- `search_flights`: returns matching flights for route, date, and traveler count
-- `calculate_budget`: returns remaining budget after flight and local transport
-- `search_hotels`: returns hotels that fit the nightly budget and preferences
+### Clarification
 
-### Step 3: Build the agent
+Before tools, the agent should have:
 
-Implement `build_agent(...)`.
+- customer name
+- phone number
+- email
+- shipping address
+- at least one item and quantity
 
-You should:
+If anything is missing, it should ask and stop.
 
-1. create `TravelDataStore`
-2. build the chat model
-3. build the tools
-4. call `create_agent(...)`
+## 5. How To Debug
 
-### Step 4: Run the agent
+When a case fails, inspect:
 
-Implement `run_agent(...)`.
+- tool trace: did the model call tools too early or in the wrong order?
+- saved JSON: did it save the wrong payload or save when it should not?
+- final answer: was the clarification, refusal, or confirmation grounded and concise?
 
-You should:
+## 6. Improvement Loop
 
-1. build the agent
-2. invoke it with one user message
-3. extract the final AI answer
-4. extract a lightweight tool-call trace
-5. return `AgentResult`
+Use this loop:
 
-## 6. Tool-Calling Expectations
+1. run `simple_solution`
+2. run `src`
+3. inspect failing cases
+4. tighten prompt
+5. tighten tool schema
+6. rerun the grader
 
-For standard travel requests, the expected tool order is:
-
-1. `search_flights`
-2. `calculate_budget`
-3. `search_hotels`
-
-For clarification and guardrail cases, the agent may respond without using tools.
-
-## 7. Running the Lab
-
-Setup:
+Run your implementation with:
 
 ```bash
-cd labs
-uv sync --extra dev
+python grade/scoring.py --module src.agent.graph --provider google
 ```
-
-Grade your implementation:
-
-```bash
-uv run python grade/scoring.py --module agent.graph --provider google
-```
-
-Run with the optional LLM judge:
-
-```bash
-uv run python grade/scoring.py --module agent.graph --provider google --judge-provider google
-```
-
-## 8. Submission Standard
-
-A strong submission should:
-
-- use the required tools correctly
-- keep tool schemas readable and specific
-- produce grounded recommendations
-- handle missing information clearly
-- refuse unsafe requests cleanly
-- generate concise, useful Vietnamese answers

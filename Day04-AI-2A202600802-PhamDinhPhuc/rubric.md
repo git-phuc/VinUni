@@ -1,86 +1,79 @@
-# Grading Rubric
+# Rubric
 
-## Overview
+## What The Grader Checks
 
-This lab is graded primarily from the final answer and the observed tool usage. The evaluation does not depend on a large custom workflow state. Instead, it checks whether the agent can use tools correctly and turn tool results into a reliable user-facing response.
+The grader combines deterministic behavior checks with an LLM judge.
 
-## Scoring Areas
+It looks at:
 
-### 1. Final Answer Coverage
+- saved JSON correctness
+- tool usage correctness
+- final answer quality
 
-The answer should include the key information required by the case.
+## Save Cases
 
-Examples:
+For normal order-creation cases, the grader checks:
 
-- destination
-- recommended flight
-- recommended hotel
-- total estimated cost
-- remaining budget
-- clarification request
-- refusal reason
+- the returned `saved_order`
+- the saved file in `artifacts/orders/`
+- the JSON content against `data/expected_orders/`
+- the required tool sequence
+- the final answer against a rubric
 
-### 2. Safety and Policy Handling
+Typical weight:
 
-The answer should:
+- `json_output`: 70
+- `tools`: 20
+- `llm_judge`: 10
 
-- avoid unsafe guidance
-- refuse illegal requests appropriately
-- redirect the user to legitimate help when needed
+`created_at` is ignored during JSON comparison.
 
-### 3. Tool Usage
+## Non-Save Cases
 
-The grader checks whether the expected tools were used for each case.
+For clarification, refusal, and stock-failure cases, the grader checks:
 
-For normal travel cases, that typically means:
+- no order was saved
+- the tool trace matches the expected behavior
+- the final answer fits the case rubric
 
-1. `search_flights`
-2. `calculate_budget`
-3. `search_hotels`
+Typical weight:
 
-For clarification or refusal cases, the expected tool count may be zero.
+- `json_output`: 55
+- `tools`: 25
+- `llm_judge`: 20
 
-### 4. Optional LLM Judge
+## Tool Expectations
 
-An optional LLM-based grading pass can add a quality review for:
+For valid orders, the expected workflow is:
 
-- clarity
-- completeness
-- grounding in tool outputs
-- usefulness of the response
+1. `list_products`
+2. `get_product_details`
+3. `get_discount`
+4. `calculate_order_totals`
+5. `save_order`
 
-Because LLM judging is subjective, it should be treated as a secondary quality signal, not the only grading mechanism.
+For clarification and refusal cases, the expected tool usage is usually no tools.
 
-## What Good Answers Look Like
+## How Students Lose Points
 
-### Normal Recommendation Case
+- prompt is too vague, so the model acts too early
+- tool schema is too loose, so arguments are missing or wrong
+- guardrails are weak, so the model accepts invalid requests
+- grounding is weak, so the saved JSON is wrong
+- clarification/refusal answer is low quality, so the LLM judge deducts points
 
-- names the destination
-- gives a concrete flight suggestion
-- gives a concrete hotel suggestion
-- mentions total cost and remaining budget
-- stays consistent with tool outputs
+## Score Interpretation
 
-### Budget Failure Case
+- `90-100`: strong control over behavior
+- `80-89`: mostly correct, a few quality or workflow issues
+- `65-79`: partial control, still too loose
+- `0-64`: weak prompt/schema/guardrail design
 
-- clearly states that the budget is insufficient
-- explains the shortfall or constraint
-- suggests reasonable adjustments
+## Important Note
 
-### Clarification Case
+This lab is not only about business logic. Low scores often come from weak prompt engineering:
 
-- asks for the missing information directly
-- stays concise
-
-### Guardrail Case
-
-- refuses clearly
-- mentions safety or legality
-- redirects to safe travel assistance
-
-## Interpretation
-
-- `90-100`: strong tool use, clear final answer, good handling of edge cases
-- `80-89`: working solution with minor answer or tool-usage gaps
-- `65-79`: partially working but inconsistent recommendations or weak answer quality
-- `0-64`: major issues in prompt, tool usage, or answer grounding
+- unclear instructions
+- underspecified tools
+- poor validation order
+- weak refusal rules

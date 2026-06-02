@@ -1,64 +1,87 @@
-# TravelBuddy Lab: Tool-Calling Agent with `create_agent`
+# OrderDesk Prompt Engineering Lab
 
-This lab introduces a practical pattern for building an LLM application that can reason over tool outputs and produce a grounded final response. You will implement a travel assistant for TravelBuddy that can search flights, estimate budget feasibility, and suggest hotels based on the remaining budget.
+Build an LLM order agent for an electronics retailer and improve its score through prompt engineering.
 
-## Prerequisite Knowledge
+In this lab, the agent must:
 
-Before starting this lab, you should be comfortable with:
+- understand Vietnamese and mixed-language order requests
+- use tools in the right order
+- ask for missing information before acting
+- refuse unsafe or policy-breaking requests
+- save the final order as grounded JSON
 
-- basic Python functions and modules
-- reading JSON data
-- environment setup with `uv`
-- the idea of LLM tools / function calling
-- prompt basics for system and user instructions
+The main goal is not just to make the code run. The goal is to improve agent behavior by tightening the prompt, tool schema, and guardrails.
 
-## Learning Outcomes
+## What You Will Practice
 
-After completing this lab, you should be able to:
+- writing a stronger system prompt
+- designing clearer tool schemas
+- forcing clarification before tool use
+- adding guardrails for unsafe requests
+- grounding final answers in tool results
+- debugging failures from tool traces and saved artifacts
 
-- build a prebuilt tool-calling agent with `create_agent`
-- design clear tool schemas and tool descriptions
-- write a system prompt that controls tool usage and answer style
-- keep the final answer grounded in tool outputs
-- evaluate agent quality with answer-based grading
+## Repository Map
 
-## Lab Deliverable
+- `src/`: your implementation
+- `simple_solution/`: weak baseline
+- `data/products.json`: product catalog
+- `data/graded_cases.json`: graded scenarios
+- `data/expected_orders/`: expected saved JSON for save cases
+- `grade/scoring.py`: grader
+- `guide.md`: step-by-step workflow
+- `rubric.md`: grading rules
 
-Complete [src/agent/graph.py](/Users/duongnh59.al1/Documents/Project/Vin20K/Cohort2/Day-4-Lab/labs/src/agent/graph.py) so that the agent:
+## Recommended Workflow
 
-- calls the correct tools when information is available
-- asks for clarification when key trip details are missing
-- refuses unsafe or illegal requests
-- returns a concise final answer in Vietnamese
-
-## Project Layout
-
-- `task.txt`: assignment brief
-- `guide.md`: implementation guide
-- `rubric.md`: grading rubric
-- `src/agent/graph.py`: lab scaffold
-- `src/core/`: model helpers and result schema
-- `src/utils/`: dataset helpers
-- `grade/scoring.py`: grading script
-- `data/`: datasets and grading cases
+1. Run the weak baseline first.
+2. Record its score.
+3. Improve `src/`.
+4. Run the grader on `src/`.
+5. Repeat until your score clearly beats the baseline.
 
 ## Setup
 
-```bash
-cd labs
-uv sync --extra dev
-```
-
-## Run the Grader
+Create a `.env` file:
 
 ```bash
-uv run python grade/scoring.py --module agent.graph --provider google
+GOOGLE_API_KEY=...
+LLM_MODEL=gemini-2.5-flash
 ```
 
-## Optional LLM Judge
-
-The grader also supports an additional LLM-based quality pass for the final answer:
+Optional local model:
 
 ```bash
-uv run python grade/scoring.py --module agent.graph --provider google --judge-provider google
+OLLAMA_MODEL=qwen3.5:3b
+OLLAMA_BASE_URL=http://localhost:11434
 ```
+
+## Commands
+
+Run the weak baseline:
+
+```bash
+python grade/scoring.py --module simple_solution.agent.graph --provider google
+```
+
+Run your implementation:
+
+```bash
+python grade/scoring.py --module src.agent.graph --provider google
+```
+
+Run tests:
+
+```bash
+pytest -q
+```
+
+## What A Strong Submission Does
+
+- clarifies before tool use when required fields are missing
+- refuses invalid requests without calling tools
+- follows the expected tool sequence on valid orders
+- saves the correct JSON artifact
+- gives a concise grounded answer in Vietnamese
+
+Read [guide.md](/Users/duongnh59.al1/Documents/Project/Vin20K/Cohort2/Day-4-Lab/labs_update/guide.md) before editing `src/`.
