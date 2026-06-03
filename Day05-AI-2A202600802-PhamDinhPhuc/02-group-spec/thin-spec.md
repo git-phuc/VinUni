@@ -98,7 +98,7 @@ Prototype xử lý bằng ask loop, source status, no-source/unknown response, c
 | Thành viên | Việc phụ trách | Bằng chứng cần có trong repo |
 |---|---|---|
 | Phúc | Research / evidence | Screenshot slide, README Day05, quote câu hỏi mơ hồ |
-| Phúc | SPEC | `evidence-pack.md`, `workflow.md`, `thin-spec.md` |
-| Phúc | Prototype | `prototype/index.html`, `styles.css`, `app.js` |
-| Phúc | Test / failure path | Test happy, low-confidence, no-source/unknown, correction, wrong-scope |
+| Tuấn Anh | SPEC | `evidence-pack.md`, `workflow.md`, `thin-spec.md` |
+| Vũ Anh | Prototype | `prototype/index.html`, `styles.css`, `app.js` |
+| Cung | Test / failure path | Test happy, low-confidence, no-source/unknown, correction, wrong-scope |
 | Phúc | Demo script / repo | README hoặc demo notes |
