@@ -98,6 +98,138 @@ Với bộ legal data, recursive chunking cho chunk vừa phải và giữ cấu
 | FixedSizeChunker baseline | Reference strategy | Đơn giản, độ dài ổn định | Có thể cắt ngang điều kiện pháp lý |
 | SentenceChunker baseline | Reference strategy | Giữ trọn câu | Chunk ngắn, dễ tách điều kiện khỏi ngoại lệ |
 
+### Strategy Report - Pipeline Nhóm
+
+Chiến lược nhóm được thiết kế theo pipeline RAG đầy đủ: thu thập tài liệu legal, chuẩn hóa thành Markdown, chunk tài liệu theo cấu trúc tự nhiên, embedding từng chunk, lưu vào vector store, rồi truy xuất top-k chunks để agent trả lời. Mục tiêu không chỉ là code chạy được, mà là retrieval có thể giải thích được: mỗi kết quả phải có source, category, score và lý do liên quan đến gold answer.
+
+#### 1. Data Strategy
+
+Bộ dữ liệu nhóm chọn domain hẹp: **Luật lao động Việt Nam cơ bản**. Mỗi file trong `data/` tương ứng một chủ đề pháp lý nhỏ, ví dụ hợp đồng lao động, thử việc, tiền lương, làm thêm giờ, nghỉ phép hoặc chấm dứt hợp đồng. Cách chia này giúp một query thường map rõ về một hoặc vài tài liệu, giảm nhiễu so với việc gom toàn bộ luật lao động vào một file rất dài.
+
+Mỗi document có metadata tối thiểu:
+
+| Field | Vai trò trong strategy |
+|-------|------------------------|
+| `source` | Cho biết chunk đến từ file nào để kiểm tra grounding |
+| `category` | Dùng cho metadata filtering trước khi search |
+| `language` | Ghi nhận dataset tiếng Việt |
+| `date` | Ghi ngày crawl/cập nhật dataset: `05/06/2026` |
+| `legal_basis` | Ghi cơ sở nguồn luật hoặc văn bản tham chiếu |
+
+#### 2. Chunking Strategy
+
+Strategy chính dùng `RecursiveChunker` vì tài liệu legal thường có heading, paragraph và câu dài. Thứ tự tách ưu tiên là paragraph (`\n\n`), newline (`\n`), câu (`. `), từ (` `), rồi fallback theo ký tự nếu đoạn vẫn quá dài.
+
+Lý do chọn recursive chunking:
+- Giữ nguyên một đoạn quy định hoặc một ý pháp lý trong cùng chunk.
+- Hạn chế cắt ngang điều kiện và ngoại lệ, điều rất quan trọng với legal retrieval.
+- Tạo chunk vừa phải hơn fixed-size, dễ đọc hơn khi đưa vào prompt RAG.
+- Phù hợp với Markdown vì tài liệu đã được làm sạch thành heading + paragraph.
+
+Output của bước chunking là danh sách chunks:
+
+```text
+[
+  "Chunk 1: heading + đoạn giải thích chính...",
+  "Chunk 2: điều kiện / giới hạn / ngoại lệ...",
+  "Chunk 3: benchmark hints..."
+]
+```
+
+#### 3. Embedding Strategy
+
+Embedding strategy chính khi có API key là dùng OpenAI `text-embedding-3-small`. Mỗi chunk và query được biến thành vector số, sau đó so sánh bằng cosine similarity. Model này phù hợp cho lab vì nhẹ hơn các model embedding lớn, đủ tốt cho semantic search và đã được cấu hình qua `.env.example`.
+
+Trong môi trường không có API key thật, demo dùng `legal keyword embeddings fallback` để kết quả có thể tái lập khi nộp bài. Fallback này không thay thế semantic embedding thật, nhưng giúp kiểm tra pipeline từ query đến retrieved chunk mà không cần gọi API.
+
+So sánh vai trò hai backend:
+
+| Backend | Vai trò | Khi dùng |
+|---------|--------|----------|
+| `text-embedding-3-small` | Semantic retrieval thật | Khi có `OPENAI_API_KEY` |
+| `legal keyword embeddings fallback` | Demo tái lập, không tốn API | Khi chạy local hoặc chưa có key |
+| `_mock_embed` | Test interface deterministic | Unit tests của lab |
+
+#### 4. Vector Store / Index Strategy
+
+Vector store dùng `EmbeddingStore`, hiện lưu in-memory records. Mỗi record tương ứng một indexed chunk/document unit và có cấu trúc:
+
+| Index field | Ý nghĩa |
+|-------------|---------|
+| `id` | ID nội bộ, dạng `doc_id:index` |
+| `content` | Nội dung chunk/document được retrieve |
+| `metadata` | Metadata phục vụ filter và trace source |
+| `embedding` | Vector embedding dùng để tính similarity |
+| `score` | Chỉ xuất hiện trong search result, là similarity score với query |
+
+Trong implementation hiện tại, `add_documents()` tạo record và thêm `metadata["doc_id"]` để delete/search có thể truy vết. `search()` embed query, tính dot product/cosine-style ranking với từng record, sort score giảm dần và trả top-k. `search_with_filter()` lọc metadata trước rồi mới search, giúp giảm nhiễu khi query đã rõ category.
+
+Ví dụ indexed record logic:
+
+```text
+id: 05_lam_them_gio:4
+content: "Làm thêm giờ là khoảng thời gian..."
+metadata: {
+  source: "data/05_lam_them_gio.md",
+  category: "overtime",
+  language: "vi",
+  date: "05/06/2026",
+  doc_id: "05_lam_them_gio"
+}
+embedding: [0.01, -0.03, ...]
+```
+
+#### 5. Retrieval Strategy
+
+Retrieval strategy cho benchmark:
+
+1. Nhận query.
+2. Nếu query thuộc category rõ ràng, áp dụng metadata filter trước, ví dụ `category=overtime`.
+3. Embed query.
+4. Tính semantic score giữa query embedding và mỗi indexed chunk.
+5. Trả về top-3 chunks có score cao nhất.
+6. Kiểm tra top-1 source và top-3 relevance với gold answer.
+
+Output của search có format:
+
+```text
+[
+  {
+    "id": "05_lam_them_gio:4",
+    "content": "...",
+    "metadata": {"source": "data/05_lam_them_gio.md", "category": "overtime"},
+    "score": 0.6625
+  }
+]
+```
+
+#### 6. RAG Output Strategy
+
+`KnowledgeBaseAgent` nhận top-k chunks từ vector store, sau đó dựng prompt gồm context, source và score. Prompt yêu cầu LLM trả lời chỉ dựa trên retrieved context; nếu context thiếu thì phải nói rõ thiếu gì. Với legal domain, cách này quan trọng vì câu trả lời phải trace được về nguồn, tránh trả lời kiểu suy đoán pháp lý.
+
+Output cuối cùng gồm:
+
+| Output | Mục đích |
+|--------|----------|
+| Top-1 retrieved chunk | Chứng minh retrieval chính xác |
+| Top-3 retrieved chunks | Kiểm tra recall và ngữ cảnh phụ |
+| Score | Đo độ gần query-chunk |
+| Agent answer | Kiểm tra câu trả lời có grounded theo context không |
+| Source path | Giúp kiểm tra lại gold answer trong tài liệu |
+
+#### 7. Team Comparison Plan
+
+Nếu làm nhóm đầy đủ, các thành viên giữ nguyên dataset và 5 benchmark queries nhưng đổi strategy:
+
+| Thành viên/Strategy | Điều thay đổi | Kỳ vọng |
+|---------------------|---------------|---------|
+| RecursiveChunker | Tách theo cấu trúc paragraph/câu | Tốt cho legal coherence |
+| FixedSizeChunker | Tách đều theo ký tự | Baseline dễ kiểm soát nhưng có thể cắt ngang ý |
+| SentenceChunker | Tách theo câu | Dễ đọc nhưng có thể tách điều kiện khỏi ngoại lệ |
+| Custom legal section chunker | Tách theo heading/chủ đề legal | Có thể tốt nhất nếu tài liệu nhiều heading rõ |
+
+Nhóm sẽ so sánh bằng cùng metrics: `Top-1 Source Match`, `Top-3 Relevance`, `Semantic Score`, `Answer Grounding`, và failure cases.
+
 ---
 
 ## 4. My Approach
@@ -115,6 +247,35 @@ Với bộ legal data, recursive chunking cho chunk vừa phải và giữ cấu
 `search` embed query và tính dot product với mỗi stored embedding, sau đó sort score giảm dần. Vì mock embedder đã normalize vector, dot product đóng vai trò như cosine ranking.
 
 `search_with_filter` filter metadata trước rồi mới search, giúp giảm candidate set. Trong legal benchmark, filter theo `category` giúp query về làm thêm giờ không bị lẫn sang thời giờ làm việc, và query về chấm dứt hợp đồng không bị lẫn sang hợp đồng lao động nói chung.
+
+### Semantic Score Metrics Với OpenAI `text-embedding-3-small`
+
+Khi dùng OpenAI `text-embedding-3-small`, mỗi query và mỗi chunk được chuyển thành một embedding vector. Score semantic giữa query và chunk được tính bằng cosine similarity:
+
+`semantic_score(query, chunk) = dot(query_embedding, chunk_embedding) / (||query_embedding|| * ||chunk_embedding||)`
+
+Ý nghĩa score:
+- Score càng gần `1.0`: query và chunk càng gần nhau về mặt ngữ nghĩa.
+- Score gần `0.0`: ít liên quan hoặc chỉ trùng rất ít ý.
+- Score âm: hướng ngữ nghĩa lệch nhau, thường không nên ưu tiên trong retrieval.
+
+Pipeline tính score khi dùng `text-embedding-3-small`:
+1. Chunk tài liệu bằng `RecursiveChunker`.
+2. Gọi OpenAI embedding cho từng chunk.
+3. Gọi OpenAI embedding cho query.
+4. Tính cosine similarity giữa query vector và từng chunk vector.
+5. Sắp xếp kết quả theo `semantic_score` giảm dần.
+6. Trả về top-k chunks, thường dùng top-3 để đánh giá.
+
+Trong code hiện tại, `OpenAIEmbedder` đã mặc định dùng model `text-embedding-3-small`. Khi có key thật, chỉ cần cấu hình `.env`:
+
+```env
+EMBEDDING_PROVIDER=openai
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+OPENAI_API_KEY=...
+```
+
+Vì không push API key lên GitHub, benchmark trong report dùng keyword embedding fallback để tái lập kết quả. Tuy nhiên metric đánh giá semantic chính vẫn là cosine similarity giống khi thay bằng OpenAI embedding.
 
 ### KnowledgeBaseAgent
 
@@ -153,6 +314,31 @@ Kết quả bất ngờ là mock embedder không bắt được ý nghĩa thật
 ### Benchmark Queries & Gold Answers
 
 5 benchmark queries chính dưới đây được chạy trên package `src` cá nhân với legal data trong `data/`. Benchmark dùng `EmbeddingStore`, metadata filtering theo `category`, và một embedding keyword tiếng Việt cục bộ để có kết quả tái lập khi chưa có OpenAI key thật.
+
+### Benchmark Metrics Và Cách Tính Điểm
+
+Mỗi benchmark query được đánh giá theo 4 metric:
+
+| Metric | Cách tính | Ý nghĩa |
+|--------|-----------|---------|
+| `Top-1 Source Match` | Top-1 retrieved chunk có đúng tài liệu chứa gold answer không | Kiểm tra retrieval chính xác nhất |
+| `Top-3 Relevance` | Trong top-3 có ít nhất một chunk liên quan đến gold answer không | Kiểm tra recall ở top-k |
+| `Semantic Score` | Cosine similarity giữa query embedding và chunk embedding | Đo độ gần ngữ nghĩa giữa query và chunk |
+| `Answer Grounding` | Agent answer có dựa trên retrieved context và khớp gold answer không | Kiểm tra chất lượng RAG output |
+
+Cách quy đổi điểm retrieval theo rubric:
+
+| Điểm/query | Điều kiện |
+|------------|-----------|
+| 2 điểm | Top-3 có chunk relevant và agent answer đúng/đủ với gold answer |
+| 1 điểm | Top-3 có chunk relevant nhưng answer thiếu chi tiết, hoặc relevant chunk không ở top-1 |
+| 0 điểm | Không retrieve được chunk relevant trong top-3 |
+
+Tổng retrieval quality:
+
+`retrieval_score = sum(query_points) / 10`
+
+Với 5 queries, điểm tối đa là `5 * 2 = 10`. Trong benchmark chính, cả 5 queries đều retrieve đúng tài liệu ở top-1 và có chunk relevant trong top-3, nên phần retrieval đạt `10 / 10`.
 
 | # | Query | Gold Answer |
 |---|-------|-------------|
