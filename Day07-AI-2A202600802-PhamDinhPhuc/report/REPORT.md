@@ -46,20 +46,21 @@ Overlap lớn hơn tạo nhiều chunk hơn, nhưng giúp thông tin ở ranh gi
 
 | # | Tên tài liệu | Nguồn | Số ký tự | Metadata đã gán |
 |---|--------------|-------|----------|-----------------|
-| 1 | `01_hop_dong_lao_dong.md` | Bộ luật Lao động 2019, Cổng thông tin điện tử Chính phủ | 1763 | `category=contract`, `language=vi` |
-| 2 | `02_thu_viec.md` | Bộ luật Lao động 2019, Cổng thông tin điện tử Chính phủ | 1776 | `category=probation`, `language=vi` |
-| 3 | `03_tien_luong.md` | Bộ luật Lao động 2019 + Nghị định 145/2020/NĐ-CP | 1801 | `category=wage`, `language=vi` |
-| 4 | `04_thoi_gio_lam_viec_nghi_ngoi.md` | Bộ luật Lao động 2019 + Thư viện Pháp luật | 1800 | `category=working_time`, `language=vi` |
-| 5 | `05_lam_them_gio.md` | Bộ luật Lao động 2019 + Nghị định 145/2020/NĐ-CP | 1790 | `category=overtime`, `language=vi` |
-| 6 | `06_nghi_phep_ngay_le.md` | Bộ luật Lao động 2019, Cổng thông tin điện tử Chính phủ | 1742 | `category=leave`, `language=vi` |
-| 7 | `07_cham_dut_hop_dong.md` | Bộ luật Lao động 2019, Cổng thông tin điện tử Chính phủ | 1949 | `category=termination`, `language=vi` |
-| 8 | `08_ky_luat_an_toan_lao_dong.md` | Bộ luật Lao động 2019 + Nghị định 145/2020/NĐ-CP | 1872 | `category=discipline_safety`, `language=vi` |
+| 1 | `01_hop_dong_lao_dong.md` | Bộ luật Lao động 2019, Cổng thông tin điện tử Chính phủ | 1763 | `category=contract`, `language=vi`, `date=05/06/2026` |
+| 2 | `02_thu_viec.md` | Bộ luật Lao động 2019, Cổng thông tin điện tử Chính phủ | 1776 | `category=probation`, `language=vi`, `date=05/06/2026` |
+| 3 | `03_tien_luong.md` | Bộ luật Lao động 2019 + Nghị định 145/2020/NĐ-CP | 1801 | `category=wage`, `language=vi`, `date=05/06/2026` |
+| 4 | `04_thoi_gio_lam_viec_nghi_ngoi.md` | Bộ luật Lao động 2019 + Thư viện Pháp luật | 1800 | `category=working_time`, `language=vi`, `date=05/06/2026` |
+| 5 | `05_lam_them_gio.md` | Bộ luật Lao động 2019 + Nghị định 145/2020/NĐ-CP | 1790 | `category=overtime`, `language=vi`, `date=05/06/2026` |
+| 6 | `06_nghi_phep_ngay_le.md` | Bộ luật Lao động 2019, Cổng thông tin điện tử Chính phủ | 1742 | `category=leave`, `language=vi`, `date=05/06/2026` |
+| 7 | `07_cham_dut_hop_dong.md` | Bộ luật Lao động 2019, Cổng thông tin điện tử Chính phủ | 1949 | `category=termination`, `language=vi`, `date=05/06/2026` |
+| 8 | `08_ky_luat_an_toan_lao_dong.md` | Bộ luật Lao động 2019 + Nghị định 145/2020/NĐ-CP | 1872 | `category=discipline_safety`, `language=vi`, `date=05/06/2026` |
 
 | Trường metadata | Kiểu | Ví dụ giá trị | Tại sao hữu ích cho retrieval? |
 |----------------|------|---------------|-------------------------------|
 | `source` | string | `data/05_lam_them_gio.md` | Truy vết chunk về tài liệu gốc |
 | `category` | string | `overtime`, `wage`, `termination` | Lọc trước khi search để giảm nhiễu |
 | `language` | string | `vi` | Xác định ngôn ngữ của bộ tài liệu |
+| `date` | string | `05/06/2026` | Ghi ngày crawl/cập nhật dataset để lọc hoặc kiểm tra độ mới của tài liệu |
 
 ---
 

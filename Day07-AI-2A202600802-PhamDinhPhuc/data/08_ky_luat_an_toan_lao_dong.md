@@ -8,6 +8,7 @@ Metadata:
 - domain: vietnam_labor_law
 - category: discipline_safety
 - language: vi
+- date: 05/06/2026
 - legal_basis: Bộ luật Lao động 2019, quy định về kỷ luật lao động và an toàn vệ sinh lao động
 
 Note: Tài liệu này chỉ phục vụ demo retrieval trong lab, không phải tư vấn pháp lý.

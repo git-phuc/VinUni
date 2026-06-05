@@ -1,5 +1,6 @@
 {
   "domain": "vietnam_labor_law_basics",
+  "date": "05/06/2026",
   "created_for": "Day 7 Embedding & Vector Store retrieval benchmark",
   "crawl_method": "Tavily web search, then manual cleaning into small Markdown documents",
   "sources": [

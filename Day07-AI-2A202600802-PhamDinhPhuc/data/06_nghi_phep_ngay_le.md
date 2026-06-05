@@ -7,6 +7,7 @@ Metadata:
 - domain: vietnam_labor_law
 - category: leave
 - language: vi
+- date: 05/06/2026
 - legal_basis: Bộ luật Lao động 2019, quy định về nghỉ hằng năm, nghỉ lễ tết và nghỉ việc riêng
 
 Note: Tài liệu này chỉ phục vụ demo retrieval trong lab, không phải tư vấn pháp lý.
