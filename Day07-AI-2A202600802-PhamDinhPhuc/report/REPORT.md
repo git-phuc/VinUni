@@ -377,6 +377,119 @@ Failure case tiềm ẩn: query về "thời giờ làm việc" và "làm thêm 
 
 ---
 
+## 8. Tổng Hợp Report Nhóm
+
+Phần này tổng hợp report của 4 thành viên trong nhóm: Phạm Đình Phúc, Hà Vũ Anh, Nguyễn Tuấn Anh và Đỗ Văn Cung. Mục tiêu là so sánh strategy thực tế của từng người, xem ai có cải tiến đáng học hỏi, và chọn một pipeline chung để trình bày nếu nhóm cần thống nhất.
+
+### 8.1. Phần Của Phạm Đình Phúc - 2A202600802
+
+Phần của tôi dùng domain **Luật lao động Việt Nam cơ bản** với 8 file Markdown đã làm sạch trong thư mục `data/`. Dataset được chia theo các chủ đề nhỏ: hợp đồng lao động, thử việc, tiền lương, thời giờ làm việc, làm thêm giờ, nghỉ phép, chấm dứt hợp đồng và kỷ luật/an toàn lao động. Mỗi file có metadata `category`, `language`, `date` và `source` để phục vụ retrieval và traceability.
+
+Strategy chính của tôi là `RecursiveChunker`. Lý do chọn strategy này là tài liệu legal có cấu trúc đoạn văn và heading rõ, nên tách theo paragraph/newline/câu giúp giữ điều kiện pháp lý và ngoại lệ trong cùng một chunk tốt hơn fixed-size chunking. Tôi cũng làm rõ pipeline embedding bằng OpenAI `text-embedding-3-small`: query và chunk được embed thành vector, sau đó tính cosine similarity để tạo `Semantic Score`.
+
+Kết quả chính:
+
+| Hạng mục | Kết quả |
+|----------|---------|
+| Dataset | 8 tài liệu legal tiếng Việt |
+| Strategy | `RecursiveChunker` |
+| Embedding khi có API | OpenAI `text-embedding-3-small` |
+| Fallback local | Legal keyword embedding để benchmark tái lập |
+| Benchmark chính | 5 / 5 queries đúng top-1 |
+| Retrieval score | 10 / 10 |
+| Extra smoke checks | 3 / 3 đúng top-1 |
+| Unit tests | 42 / 42 passed |
+
+Điểm mạnh của phần này là pipeline ổn định, dữ liệu vừa đủ hẹp, benchmark rõ ràng và có metrics tính điểm cụ thể. Điểm có thể cải thiện là nếu tài liệu dài hơn hoặc nhiều heading hơn, `RecursiveChunker` có thể không giữ tiêu đề cha trong mọi sub-chunk; khi đó nên học thêm ý tưởng `MarkdownSectionChunker` của Hà Anh.
+
+### 8.2. Phần Của Hà Vũ Anh - 2A202600571
+
+Report của Hà Anh vẫn dùng domain luật lao động, nhưng mở rộng dataset từ 8 file lên **11 file** bằng cách thêm các chủ đề như bảo hiểm xã hội, giải quyết tranh chấp lao động và công đoàn. Đây là hướng mở rộng dữ liệu tốt vì làm hệ thống gần với domain thật hơn, nhưng cũng làm retrieval khó hơn do tài liệu dài và nhiều từ khóa pháp lý bị lặp.
+
+Cải tiến đáng chú ý nhất của Hà Anh là thử thêm **`MarkdownSectionChunker`** bên cạnh `RecursiveChunker`. Ý tưởng của strategy này là tách theo heading Markdown, rồi prepend tiêu đề section vào các sub-chunk con. Với legal documents, cách này rất hợp lý vì tiêu đề như "Nghỉ phép", "Làm thêm giờ", "Chấm dứt hợp đồng" là tín hiệu ngữ nghĩa mạnh giúp chunk không bị mất chủ đề.
+
+Kết quả chính trong report Hà Anh:
+
+| Strategy | Retrieval Score | Điểm mạnh | Điểm yếu |
+|----------|-----------------|-----------|----------|
+| `RecursiveChunker` | 8 / 10 | Giữ đoạn văn tự nhiên | Có thể mất ngữ cảnh heading khi chunk nhỏ |
+| `MarkdownSectionChunker` | 10 / 10 | Giữ heading + sub-section, tốt cho Markdown legal docs | Phụ thuộc tài liệu phải có Markdown heading chuẩn |
+| `FixedSizeChunker` | 5 / 10 | Đơn giản | Dễ cắt ngang ý pháp lý |
+| `SentenceChunker` | 6 / 10 | Giữ câu nguyên vẹn | Chunk vụn, dễ tách điều kiện khỏi ngoại lệ |
+
+Điểm học được từ Hà Anh là **heading-aware chunking** có thể cải thiện retrieval khi tài liệu dài hoặc có nhiều section. Ví dụ trong extra smoke check, `RecursiveChunker` lấy sai query nghỉ phép sang `09_bao_hiem_xa_hoi.md`, còn `MarkdownSectionChunker` lấy đúng `06_nghi_phep_ngay_le.md`. Đây là bằng chứng tốt cho việc thêm tiêu đề section vào chunk.
+
+Tuy nhiên, report Hà Anh cũng chỉ ra một rủi ro: khi thêm các file rất dài như bảo hiểm xã hội, keyword-based embedding có thể bị nhiễu vì các cụm như "người lao động", "tiền lương", "hợp đồng" xuất hiện quá nhiều. Vì vậy nếu mở rộng dataset lên 11 file, nhóm nên dùng OpenAI `text-embedding-3-small` hoặc một semantic embedding thật thay vì chỉ dựa vào keyword embedding.
+
+### 8.3. Phần Của Nguyễn Tuấn Anh - 2A202600758
+
+Tuấn Anh tập trung vào hai tài liệu đầu của nhóm: `01_hop_dong_lao_dong.md` và `02_thu_viec.md`. Đây là phần liên quan đến quan hệ lao động ban đầu: loại hợp đồng, nội dung hợp đồng, thời gian thử việc, lương thử việc và việc tiếp tục hợp đồng sau thử việc.
+
+Strategy của Tuấn Anh cũng là `RecursiveChunker(chunk_size=500)`. Điểm mạnh trong report của Tuấn Anh là phân tích rất rõ vai trò của **metadata filter**. Khi chạy trên toàn bộ 8 file, hệ thống tạo khoảng 43 chunks. Nếu không filter, các query về hợp đồng/thử việc bị lẫn sang tài liệu khác vì các văn bản luật dùng rất nhiều từ khóa chung. Khi filter theo `category`, kết quả tăng rõ rệt.
+
+Kết quả chính trong report Tuấn Anh:
+
+| Benchmark | Không filter | Có metadata filter |
+|-----------|--------------|--------------------|
+| Cá nhân trên contract/probation | 1 / 5 | 5 / 5 |
+| Nhóm trên 8 file legal | 4 / 5 | 5 / 5 |
+
+So sánh strategy nhóm trong report Tuấn Anh:
+
+| Strategy | Tổng chunks trên 8 file | Top-3 không filter | Top-3 có filter |
+|----------|-------------------------|--------------------|-----------------|
+| `FixedSizeChunker(chunk_size=500, overlap=50)` | 34 | 2 / 5 | 5 / 5 |
+| `SentenceChunker(max_sentences_per_chunk=3)` | 30 | 4 / 5 | 5 / 5 |
+| `RecursiveChunker(chunk_size=500)` | 43 | 4 / 5 | 5 / 5 |
+
+Điểm học được từ Tuấn Anh là với legal retrieval, **metadata pre-filter không chỉ là optional mà gần như là bắt buộc**. Nhiều file luật có từ khóa trùng nhau, nên nếu search toàn bộ vector store trước rồi mới đọc top-k, hệ thống rất dễ lấy chunk cùng từ nhưng sai chủ đề. Strategy tốt hơn là nhận diện category từ query hoặc benchmark, filter candidate set, rồi mới tính semantic score.
+
+### 8.4. Phần Của Đỗ Văn Cung - 2A202600793
+
+Report của Cung hoàn thành phần cá nhân core như warm-up, chunking approach, `EmbeddingStore`, `KnowledgeBaseAgent`, similarity prediction và test results. Cung cũng chọn `RecursiveChunker(chunk_size=500)` vì strategy này cân bằng giữa việc giữ cấu trúc tự nhiên và giới hạn độ dài chunk.
+
+Điểm mạnh của Cung là giải thích khá rõ thuật toán đệ quy: tách theo paragraph, newline, câu, khoảng trắng, rồi fallback sang fixed-size nếu không còn separator phù hợp. Phần `EmbeddingStore` cũng nhấn mạnh đúng hướng triển khai: record gồm `id`, `doc_id`, `content`, `metadata`, `embedding`, search bằng dot product/similarity, filter metadata trước khi search và delete theo `doc_id`.
+
+Tuy nhiên, report của Cung vẫn còn nhiều placeholder ở phần nhóm:
+
+| Hạng mục | Tình trạng |
+|----------|------------|
+| Domain nhóm | Chưa điền |
+| Data inventory nhóm | Chưa điền |
+| Benchmark queries nhóm | Chưa điền |
+| Retrieval results nhóm | Chưa chạy |
+| So sánh với thành viên khác | Chưa điền |
+| Unit tests | 42 / 42 passed |
+
+Vì vậy, phần của Cung chưa đủ dữ liệu để so sánh retrieval score với các thành viên còn lại. Có thể lấy phần giải thích `RecursiveChunker` và fallback logic làm tham khảo, nhưng không nên dùng report này làm nguồn chính cho phần benchmark nhóm.
+
+### 8.5. So Sánh Tổng Hợp Giữa 4 Thành Viên
+
+| Thành viên | Dataset / Phạm vi | Strategy chính | Cải tiến đáng chú ý | Kết quả nổi bật | Có nên đưa vào pipeline nhóm? |
+|------------|-------------------|----------------|---------------------|-----------------|-------------------------------|
+| Phạm Đình Phúc | 8 file luật lao động | `RecursiveChunker` + metadata filter + OpenAI embedding config | Metrics rõ cho `text-embedding-3-small`, benchmark tái lập, report đầy đủ | 10 / 10 benchmark, 42 / 42 tests | Có, chọn làm baseline chính |
+| Hà Vũ Anh | 11 file luật lao động mở rộng | `RecursiveChunker` + `MarkdownSectionChunker` | Heading-aware chunking, giữ tiêu đề section trong chunk | `MarkdownSectionChunker` 10 / 10, sửa được một failure case nghỉ phép | Có, lấy ý tưởng cải tiến chunking |
+| Nguyễn Tuấn Anh | 8 file, tập trung contract/probation | `RecursiveChunker` | Phân tích metadata pre-filter rất rõ | Không filter 1 / 5 cá nhân, có filter 5 / 5; nhóm 4 / 5 lên 5 / 5 | Có, lấy nguyên tắc filter bắt buộc |
+| Đỗ Văn Cung | Chủ yếu phần cá nhân, còn placeholder nhóm | `RecursiveChunker` | Giải thích fallback và store logic rõ | 42 / 42 tests, chưa có benchmark nhóm | Chỉ lấy làm tham khảo kỹ thuật |
+
+### 8.6. Strategy Nhóm Được Chọn
+
+Nếu phải chọn một pipeline chính để nộp/demo cho nhóm, nhóm nên chọn pipeline của **Phạm Đình Phúc** làm baseline vì đầy đủ nhất và ổn định nhất: dataset 8 file vừa hẹp, metadata rõ, benchmark 5 query đạt 10 / 10, có thêm 3 smoke checks, test pass 42 / 42, và có cấu hình OpenAI `text-embedding-3-small` để chạy semantic retrieval thật khi có API key.
+
+Pipeline nhóm cuối cùng:
+
+1. Dùng dataset 8 file luật lao động làm bộ chuẩn để tránh nhiễu quá nhiều.
+2. Gắn metadata tối thiểu: `source`, `category`, `language`, `date`, `legal_basis`.
+3. Dùng `RecursiveChunker` làm baseline chính vì ổn định trên dữ liệu legal Markdown.
+4. Nếu tài liệu có heading rõ hoặc mở rộng lên nhiều file dài, bổ sung `MarkdownSectionChunker` theo ý tưởng của Hà Anh.
+5. Dùng metadata filter theo `category` trước khi search, theo kết luận từ Tuấn Anh.
+6. Dùng OpenAI `text-embedding-3-small` để tính semantic score thật khi có API key; dùng legal keyword embedding chỉ để demo local tái lập.
+7. Đánh giá bằng 4 metrics: `Top-1 Source Match`, `Top-3 Relevance`, `Semantic Score`, và `Answer Grounding`.
+
+Kết luận nhóm: `RecursiveChunker + metadata filter + text-embedding-3-small` là strategy cân bằng nhất cho bản nộp hiện tại. `MarkdownSectionChunker` là cải tiến tốt nhất nếu nhóm có thêm thời gian, đặc biệt khi tài liệu dài hơn và có heading Markdown chuẩn.
+
+---
+
 ## Tự Đánh Giá
 
 | Tiêu chí | Loại | Điểm tự đánh giá |
