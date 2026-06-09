@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 logs/
 *.sqlite3
+pageindex_doc_ids.json
