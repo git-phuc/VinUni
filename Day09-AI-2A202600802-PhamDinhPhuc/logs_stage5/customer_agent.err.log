@@ -1,0 +1,62 @@
+2026-06-09 15:08:12,678 [customer_agent] INFO HTTP Request: POST http://localhost:10000/register "HTTP/1.1 200 OK"
+2026-06-09 15:08:12,679 [customer_agent] INFO Registered with registry (attempt 1)
+2026-06-09 15:08:12,682 [customer_agent] INFO Customer Agent listening on port 10100
+INFO:     Started server process [18628]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:10100 (Press CTRL+C to quit)
+2026-06-09 15:08:54,534 [customer_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:09:18,863 [customer_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:09:19,928 [customer_agent] INFO CustomerAgent executing | task=409e1715-03a2-417a-84a3-e975055914df context=2e16e790-2190-4581-910c-4a121e01b248 trace=10581d0d-2fa8-4302-8b53-dc388d73d1b7 depth=0
+2026-06-09 15:09:20,760 [customer_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: 409e1715-03a2-417a-84a3-e975055914df, context_id: 2e16e790-2190-4581-910c-4a121e01b248).
+2026-06-09 15:09:22,715 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:09:22,745 [customer_agent] INFO Customer delegate_to_legal_agent | trace=10581d0d-2fa8-4302-8b53-dc388d73d1b7 context=2e16e790-2190-4581-910c-4a121e01b248 depth=0
+2026-06-09 15:09:23,191 [customer_agent] INFO HTTP Request: GET http://localhost:10000/discover/legal_question "HTTP/1.1 200 OK"
+2026-06-09 15:09:23,642 [customer_agent] INFO HTTP Request: GET http://localhost:10101/.well-known/agent.json "HTTP/1.1 200 OK"
+2026-06-09 15:10:18,308 [customer_agent] INFO HTTP Request: POST http://localhost:10101 "HTTP/1.1 200 OK"
+2026-06-09 15:10:39,777 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:11:37,782 [customer_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:11:38,003 [customer_agent] INFO CustomerAgent executing | task=95bbf13c-a3ed-4001-aa25-0d417c242fea context=69819390-d365-4e23-b206-1dd8c0620fa4 trace=d13624e2-185a-4df1-9cef-6f81dd0e5515 depth=0
+2026-06-09 15:11:38,016 [customer_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: 95bbf13c-a3ed-4001-aa25-0d417c242fea, context_id: 69819390-d365-4e23-b206-1dd8c0620fa4).
+2026-06-09 15:11:40,945 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:11:40,965 [customer_agent] INFO Customer delegate_to_legal_agent | trace=d13624e2-185a-4df1-9cef-6f81dd0e5515 context=69819390-d365-4e23-b206-1dd8c0620fa4 depth=0
+2026-06-09 15:11:41,406 [customer_agent] INFO HTTP Request: GET http://localhost:10000/discover/legal_question "HTTP/1.1 200 OK"
+2026-06-09 15:11:41,845 [customer_agent] INFO HTTP Request: GET http://localhost:10101/.well-known/agent.json "HTTP/1.1 200 OK"
+2026-06-09 15:12:47,586 [customer_agent] INFO HTTP Request: POST http://localhost:10101 "HTTP/1.1 200 OK"
+2026-06-09 15:12:57,769 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:14:41,309 [customer_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:14:41,531 [customer_agent] INFO CustomerAgent executing | task=4e1ca191-fd58-4129-bae5-717da11efef7 context=6fea35a3-6dde-44f3-b421-8900d8241b48 trace=b7ed2860-7b96-4d07-8843-f2ce5f25f1df depth=0
+2026-06-09 15:14:41,554 [customer_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: 4e1ca191-fd58-4129-bae5-717da11efef7, context_id: 6fea35a3-6dde-44f3-b421-8900d8241b48).
+2026-06-09 15:14:43,453 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:14:43,463 [customer_agent] INFO Customer delegate_to_legal_agent | trace=b7ed2860-7b96-4d07-8843-f2ce5f25f1df context=6fea35a3-6dde-44f3-b421-8900d8241b48 depth=0
+2026-06-09 15:14:44,152 [customer_agent] INFO HTTP Request: GET http://localhost:10000/discover/legal_question "HTTP/1.1 200 OK"
+2026-06-09 15:14:44,860 [customer_agent] INFO HTTP Request: GET http://localhost:10101/.well-known/agent.json "HTTP/1.1 200 OK"
+2026-06-09 15:15:57,612 [customer_agent] INFO HTTP Request: POST http://localhost:10101 "HTTP/1.1 200 OK"
+2026-06-09 15:16:13,811 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:18:46,463 [customer_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:18:46,721 [customer_agent] INFO CustomerAgent executing | task=fe834c1e-a04f-4da9-92c6-b78cd36f038a context=3905a31f-e228-4aa8-84cd-bbbb6161c74a trace=b36e3a5f-93f2-4da6-905b-a2ed76ad45eb depth=0
+2026-06-09 15:18:46,765 [customer_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: fe834c1e-a04f-4da9-92c6-b78cd36f038a, context_id: 3905a31f-e228-4aa8-84cd-bbbb6161c74a).
+2026-06-09 15:18:49,246 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:18:49,254 [customer_agent] INFO Customer delegate_to_legal_agent | trace=b36e3a5f-93f2-4da6-905b-a2ed76ad45eb context=3905a31f-e228-4aa8-84cd-bbbb6161c74a depth=0
+2026-06-09 15:18:49,865 [customer_agent] INFO HTTP Request: GET http://localhost:10000/discover/legal_question "HTTP/1.1 200 OK"
+2026-06-09 15:18:50,569 [customer_agent] INFO HTTP Request: GET http://localhost:10101/.well-known/agent.json "HTTP/1.1 200 OK"
+2026-06-09 15:20:09,826 [customer_agent] INFO HTTP Request: POST http://localhost:10101 "HTTP/1.1 200 OK"
+2026-06-09 15:20:27,055 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:20:29,135 [customer_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:20:29,403 [customer_agent] INFO CustomerAgent executing | task=a4e07f8d-26b2-4a88-89bc-1eb56da85661 context=65a2261b-5260-4e5a-84ae-40abf99c9377 trace=fbd92b3d-12a0-4ae6-baea-3af7cba633a2 depth=0
+2026-06-09 15:20:29,427 [customer_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: a4e07f8d-26b2-4a88-89bc-1eb56da85661, context_id: 65a2261b-5260-4e5a-84ae-40abf99c9377).
+2026-06-09 15:20:31,099 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:20:31,108 [customer_agent] INFO Customer delegate_to_legal_agent | trace=fbd92b3d-12a0-4ae6-baea-3af7cba633a2 context=65a2261b-5260-4e5a-84ae-40abf99c9377 depth=0
+2026-06-09 15:20:31,660 [customer_agent] INFO HTTP Request: GET http://localhost:10000/discover/legal_question "HTTP/1.1 200 OK"
+2026-06-09 15:20:32,357 [customer_agent] INFO HTTP Request: GET http://localhost:10101/.well-known/agent.json "HTTP/1.1 200 OK"
+2026-06-09 15:21:35,083 [customer_agent] INFO HTTP Request: POST http://localhost:10101 "HTTP/1.1 200 OK"
+2026-06-09 15:21:49,846 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 16:13:24,177 [customer_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 16:13:24,504 [customer_agent] INFO CustomerAgent executing | task=2ad3c1da-254b-4042-98b7-d3388fe4c31c context=431fd00d-48e0-44df-91e1-849d24c4cd8d trace=4598123e-699f-4076-9afe-bcdbd5be87e5 depth=0
+2026-06-09 16:13:24,533 [customer_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: 2ad3c1da-254b-4042-98b7-d3388fe4c31c, context_id: 431fd00d-48e0-44df-91e1-849d24c4cd8d).
+2026-06-09 16:13:27,017 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 16:13:27,119 [customer_agent] INFO Customer delegate_to_legal_agent | trace=4598123e-699f-4076-9afe-bcdbd5be87e5 context=431fd00d-48e0-44df-91e1-849d24c4cd8d depth=0
+2026-06-09 16:13:27,817 [customer_agent] INFO HTTP Request: GET http://localhost:10000/discover/legal_question "HTTP/1.1 200 OK"
+2026-06-09 16:13:28,379 [customer_agent] INFO HTTP Request: GET http://localhost:10101/.well-known/agent.json "HTTP/1.1 200 OK"
+2026-06-09 16:14:19,830 [customer_agent] INFO HTTP Request: POST http://localhost:10101 "HTTP/1.1 200 OK"
+2026-06-09 16:14:33,233 [customer_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"

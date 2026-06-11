@@ -1,0 +1,31 @@
+2026-06-09 15:08:08,745 [compliance_agent] INFO HTTP Request: POST http://localhost:10000/register "HTTP/1.1 200 OK"
+2026-06-09 15:08:08,747 [compliance_agent] INFO Registered with registry (attempt 1)
+2026-06-09 15:08:08,751 [compliance_agent] INFO Compliance Agent listening on port 10103
+INFO:     Started server process [4276]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:10103 (Press CTRL+C to quit)
+2026-06-09 15:09:44,964 [compliance_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:09:44,973 [compliance_agent] INFO ComplianceAgent executing | task=eda05dea-1f38-46b6-8d00-bfeef91ff7f1 context=2e16e790-2190-4581-910c-4a121e01b248 trace=10581d0d-2fa8-4302-8b53-dc388d73d1b7 depth=2
+2026-06-09 15:09:45,786 [compliance_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: eda05dea-1f38-46b6-8d00-bfeef91ff7f1, context_id: 2e16e790-2190-4581-910c-4a121e01b248).
+2026-06-09 15:09:58,677 [compliance_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:12:02,800 [compliance_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:12:02,809 [compliance_agent] INFO ComplianceAgent executing | task=ddd20818-6f28-4537-9990-e35756b4971c context=69819390-d365-4e23-b206-1dd8c0620fa4 trace=d13624e2-185a-4df1-9cef-6f81dd0e5515 depth=2
+2026-06-09 15:12:02,811 [compliance_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: ddd20818-6f28-4537-9990-e35756b4971c, context_id: 69819390-d365-4e23-b206-1dd8c0620fa4).
+2026-06-09 15:12:24,159 [compliance_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:15:05,296 [compliance_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:15:05,306 [compliance_agent] INFO ComplianceAgent executing | task=f7671e5a-39d8-42d6-9e8b-79a09aae45e1 context=6fea35a3-6dde-44f3-b421-8900d8241b48 trace=b7ed2860-7b96-4d07-8843-f2ce5f25f1df depth=2
+2026-06-09 15:15:05,309 [compliance_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: f7671e5a-39d8-42d6-9e8b-79a09aae45e1, context_id: 6fea35a3-6dde-44f3-b421-8900d8241b48).
+2026-06-09 15:15:31,639 [compliance_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:19:20,164 [compliance_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:19:20,173 [compliance_agent] INFO ComplianceAgent executing | task=1b69d4c0-9424-4edf-bcde-ed2098521585 context=3905a31f-e228-4aa8-84cd-bbbb6161c74a trace=b36e3a5f-93f2-4da6-905b-a2ed76ad45eb depth=2
+2026-06-09 15:19:20,175 [compliance_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: 1b69d4c0-9424-4edf-bcde-ed2098521585, context_id: 3905a31f-e228-4aa8-84cd-bbbb6161c74a).
+2026-06-09 15:19:44,426 [compliance_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:21:02,222 [compliance_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 15:21:02,234 [compliance_agent] INFO ComplianceAgent executing | task=2320d640-c6bf-4d1c-ab85-ec877c95c574 context=65a2261b-5260-4e5a-84ae-40abf99c9377 trace=fbd92b3d-12a0-4ae6-baea-3af7cba633a2 depth=2
+2026-06-09 15:21:02,235 [compliance_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: 2320d640-c6bf-4d1c-ab85-ec877c95c574, context_id: 65a2261b-5260-4e5a-84ae-40abf99c9377).
+2026-06-09 15:21:18,937 [compliance_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 16:13:46,408 [compliance_agent] WARNING Deprecated agent card endpoint '/.well-known/agent.json' accessed. Please use '/.well-known/agent-card.json' instead. This endpoint will be removed in a future version.
+2026-06-09 16:13:46,417 [compliance_agent] INFO ComplianceAgent executing | task=046c49dd-68e3-48cf-bf3f-7b12de855383 context=431fd00d-48e0-44df-91e1-849d24c4cd8d trace=4598123e-699f-4076-9afe-bcdbd5be87e5 depth=2
+2026-06-09 16:13:46,419 [compliance_agent] INFO Task not found or task_id not set. Creating new task for event (task_id: 046c49dd-68e3-48cf-bf3f-7b12de855383, context_id: 431fd00d-48e0-44df-91e1-849d24c4cd8d).
+2026-06-09 16:13:56,979 [compliance_agent] INFO HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"

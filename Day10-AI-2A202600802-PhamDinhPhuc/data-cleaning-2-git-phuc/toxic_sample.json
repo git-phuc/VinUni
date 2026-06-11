@@ -1,0 +1,50 @@
+[
+    {
+        "id": "A001",
+        "name": "Nguyen Van A",
+        "email": "vana@gmail.com",
+        "product": "Laptop OLED",
+        "price": 2500,
+        "category": "elec"
+    },
+    {
+        "id": "A002",
+        "name": "Tran Thi B",
+        "email": "bt@vinuni.edu.vn",
+        "product": "Ergonomic Chair",
+        "price": 300,
+        "category": "furniture"
+    },
+    {
+        "id": "A001",
+        "name": "Nguyen Van A",
+        "email": "vana@gmail.com",
+        "product": "Laptop OLED",
+        "price": 2500,
+        "category": "elec"
+    },
+    {
+        "id": "A003",
+        "name": "Le Van C",
+        "email": "levanc@sample.com",
+        "product": "Mechanical Pencil",
+        "price": 99999,
+        "category": "stationary"
+    },
+    {
+        "id": "A004",
+        "name": "Pham Van D",
+        "email": "dpham@sample.com",
+        "product": "Smartphone",
+        "price": -50,
+        "category": "elec"
+    },
+    {
+        "id": "A005",
+        "name": "Miss Unknown",
+        "email": "secret@xyz.com",
+        "product": "Smartwatch",
+        "price": 400,
+        "category": ""
+    }
+]

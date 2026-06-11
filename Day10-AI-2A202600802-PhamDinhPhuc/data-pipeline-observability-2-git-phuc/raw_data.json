@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "product": "Laptop",
+        "price": 1200,
+        "category": "electronics"
+    },
+    {
+        "id": 2,
+        "product": "Chair",
+        "price": 45,
+        "category": "furniture"
+    },
+    {
+        "id": 3,
+        "product": "Mystery Box",
+        "price": -10,
+        "category": "misc"
+    },
+    {
+        "id": 4,
+        "product": "Phone",
+        "price": 800,
+        "category": ""
+    },
+    {
+        "id": 5,
+        "product": "Monitor",
+        "price": 300,
+        "category": "electronics"
+    }
+]
