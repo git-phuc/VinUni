@@ -2,7 +2,11 @@
 
 ## Public URL
 
-Cloud public URL is pending an authenticated Railway or Render account deployment.
+Production URL deployed on Render:
+
+```text
+https://ai-agent-production-zzdf.onrender.com
+```
 
 Local Docker URL verified in this workspace on June 12, 2026:
 
@@ -13,7 +17,8 @@ http://localhost:8080
 ## Platform
 
 - Local verification: Docker Compose
-- Cloud-ready configs: Railway (`06-lab-complete/railway.toml`) and Render (`06-lab-complete/render.yaml`)
+- Cloud deployment: Render Blueprint
+- Cloud-ready configs: Railway (`06-lab-complete/railway.toml`) and Render (`render.yaml`, `06-lab-complete/render.yaml`)
 
 ## Test Commands
 
@@ -28,6 +33,7 @@ docker compose up --build
 
 ```bash
 curl http://localhost:8080/health
+curl https://ai-agent-production-zzdf.onrender.com/health
 ```
 
 Expected:
@@ -40,6 +46,7 @@ Expected:
 
 ```bash
 curl http://localhost:8080/ready
+curl https://ai-agent-production-zzdf.onrender.com/ready
 ```
 
 Expected:
@@ -133,22 +140,25 @@ Actual verified result: Redis-backed history returned the saved user and assista
 
 ## Screenshots
 
-Screenshots are pending a real cloud deployment:
+Suggested screenshot evidence:
 
-- Deployment dashboard: `screenshots/dashboard.png`
-- Service running: `screenshots/running.png`
-- Test results: `screenshots/test.png`
+- Render Blueprint dashboard showing `agent-cache` and `ai-agent-production`.
+- Render web service page showing a successful deploy.
+- Browser or terminal result for `https://ai-agent-production-zzdf.onrender.com/health`.
 
 ## Cloud Deployment Notes
 
-Current cloud deployment blocker checked on June 12, 2026:
+Cloud deployment completed on Render on June 12, 2026:
 
-- `railway` CLI is not installed.
-- `render` CLI is not installed.
-- `gh` GitHub CLI is not installed.
-- The repository remote exists: `https://github.com/VinUni-AI20k/day12_ha-tang-cloud_va_deployment`.
-
-Because Railway/Render deployment requires an authenticated account login, the local Docker app is fully verified but the public URL and dashboard screenshots still need the student's cloud login step.
+- Blueprint: `Day12`
+- Repository: `https://github.com/git-phuc/VinUni`
+- Branch: `main`
+- Blueprint path: `render.yaml`
+- Web service: `ai-agent-production`
+- Key Value service: `agent-cache`
+- Public URL: `https://ai-agent-production-zzdf.onrender.com`
+- Verified `/health`: `status=ok`, `environment=production`, `redis=ok`
+- Verified `/ready`: `ready=true`, `redis=ok`
 
 Railway:
 

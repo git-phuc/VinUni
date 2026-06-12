@@ -68,9 +68,11 @@ Services started by the final compose file:
 
 ### Exercise 3.1: Railway deployment
 
-- URL: pending Railway login and `railway up` from the student's account.
+- Production URL: `https://ai-agent-production-zzdf.onrender.com`
 - Local verified URL: `http://localhost:8080` after `docker compose up -d --build`.
-- Screenshot: pending cloud deployment dashboard screenshot.
+- Cloud platform used: Render Blueprint from `git-phuc/VinUni`, branch `main`, blueprint path `render.yaml`.
+- Verified cloud health: `/health` returned `status=ok`, `environment=production`, `redis=ok`.
+- Verified cloud readiness: `/ready` returned `ready=true`, `redis=ok`.
 
 ### Exercise 3.2: Railway vs Render config
 
