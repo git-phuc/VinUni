@@ -1,0 +1,72 @@
+{
+  "team": "Day13-AI-2A202600802-PhamDinhPhuc",
+  "schema_version": 1,
+  "findings": [
+    {
+      "fault_class": "error_spike",
+      "evidence": {"metric": "pre_run_config_inspection", "observed": "tool_error_rate was 0.18 and retry was disabled in the shipped config", "trace_ids": []},
+      "root_cause": "The initial config allowed intermittent tool failures without retry.",
+      "suggested_fix": "Set tool_error_rate to 0.0 and enable retry with two attempts."
+    },
+    {
+      "fault_class": "latency_spike",
+      "evidence": {"metric": "pre_run_config_inspection", "observed": "max_steps was 12, loop_guard was false, context_size was 8, and verbose_system was true", "trace_ids": []},
+      "root_cause": "The agent could take too many steps and send more context than needed.",
+      "suggested_fix": "Enable loop_guard, reduce max_steps/context_size, enable cache, and keep the prompt compact."
+    },
+    {
+      "fault_class": "cost_blowup",
+      "evidence": {"metric": "pre_run_config_inspection", "observed": "model_price_tier was premium, max_completion_tokens was 2000, verbose_system was true", "trace_ids": []},
+      "root_cause": "The initial config encouraged expensive and verbose generations.",
+      "suggested_fix": "Use economy tier, disable verbose_system, lower max_completion_tokens, and cache repeated requests."
+    },
+    {
+      "fault_class": "quality_drift",
+      "evidence": {"metric": "pre_run_config_inspection", "observed": "session_drift_rate was 0.06 and self_consistency was 1", "trace_ids": []},
+      "root_cause": "Long sessions could degrade answer consistency without a stabilizing check.",
+      "suggested_fix": "Set session_drift_rate to 0.0, reset context periodically, and use self_consistency 2."
+    },
+    {
+      "fault_class": "infinite_loop",
+      "evidence": {"metric": "pre_run_config_inspection", "observed": "loop_guard was false and tool_budget was 0", "trace_ids": []},
+      "root_cause": "The agent had no practical guard against repeated tool calls.",
+      "suggested_fix": "Enable loop_guard and cap tool usage with tool_budget 4."
+    },
+    {
+      "fault_class": "tool_failure",
+      "evidence": {"metric": "pre_run_config_inspection", "observed": "normalize_unicode was false and catalog_override forced macbook out of stock", "trace_ids": []},
+      "root_cause": "Unicode city names and catalog overrides could make valid requests fail.",
+      "suggested_fix": "Enable normalize_unicode and clear catalog_override."
+    },
+    {
+      "fault_class": "pii_leak",
+      "evidence": {"metric": "pre_run_prompt_config_inspection", "observed": "redact_pii was false and the initial prompt had no privacy rule", "trace_ids": []},
+      "root_cause": "The agent was not instructed or configured to suppress personal data.",
+      "suggested_fix": "Enable redact_pii, add a no-PII prompt rule, and redact wrapper output."
+    },
+    {
+      "fault_class": "fabrication",
+      "evidence": {"metric": "pre_run_prompt_inspection", "observed": "the initial prompt always asked to give a total in VND", "trace_ids": []},
+      "root_cause": "The prompt did not require refusal for out-of-stock or unknown products.",
+      "suggested_fix": "Require tool grounding and no total line for refusals."
+    },
+    {
+      "fault_class": "arithmetic_error",
+      "evidence": {"metric": "pre_run_prompt_config_inspection", "observed": "temperature was 1.6 and the initial prompt had no exact formula", "trace_ids": []},
+      "root_cause": "The model was asked to answer under high randomness without a fixed arithmetic rule.",
+      "suggested_fix": "Lower temperature and state the exact subtotal, discount, and total formula."
+    },
+    {
+      "fault_class": "tool_overuse",
+      "evidence": {"metric": "pre_run_prompt_config_inspection", "observed": "tool_budget was 0 and the initial prompt had no one-call-per-tool rule", "trace_ids": []},
+      "root_cause": "The agent had no instruction or budget limiting redundant tool calls.",
+      "suggested_fix": "Use tool_budget 4 and prompt each tool at most once."
+    },
+    {
+      "fault_class": "prompt_injection",
+      "evidence": {"metric": "pre_run_prompt_inspection", "observed": "the initial prompt did not tell the agent to treat order notes as untrusted data", "trace_ids": []},
+      "root_cause": "Instructions embedded in order notes could override the intended policy.",
+      "suggested_fix": "Add prompt injection defense and strip suspicious order notes in the wrapper."
+    }
+  ]
+}
