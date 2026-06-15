@@ -1,0 +1,21 @@
+{
+  "team": "Day13-AI-2A202600802-PhamDinhPhuc",
+  "phase": "private",
+  "headline": 92.9,
+  "sub": {
+    "correct": 0.7175,
+    "quality": 0.8274,
+    "error": 1.0,
+    "latency": 0.5592,
+    "cost": 0.0,
+    "drift": 0.8197,
+    "prompt": 0.8057
+  },
+  "diag_f1": 0.973,
+  "n": 80,
+  "n_correct": 55,
+  "judge_mode": "offline",
+  "weights_hash": "e81a8ed58d93",
+  "key_hash": "7e3905b75db0",
+  "sig": "751214f214bf7c3f2f19623f9c721c10790969e51daa3099af37a23577b5e76f"
+}
