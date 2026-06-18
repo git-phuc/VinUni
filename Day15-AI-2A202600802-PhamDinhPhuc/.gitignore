@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.env
+.pytest_cache/
+# outputs/
+data/hotpot_test.json
+data/hotpot_dev_distractor_v1.json/
+.DS_Store
