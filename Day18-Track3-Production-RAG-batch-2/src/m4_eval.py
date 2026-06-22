@@ -90,11 +90,14 @@ def failure_analysis(eval_results: list[EvalResult], bottom_n: int = 10) -> list
 
     scored = []
     for r in eval_results:
+        # Handle both EvalResult objects and dicts (from evaluate_ragas per_question)
+        def _get(key):
+            return r[key] if isinstance(r, dict) else getattr(r, key)
         metrics = {
-            "faithfulness": r.faithfulness,
-            "context_recall": r.context_recall,
-            "context_precision": r.context_precision,
-            "answer_relevancy": r.answer_relevancy,
+            "faithfulness": _get("faithfulness"),
+            "context_recall": _get("context_recall"),
+            "context_precision": _get("context_precision"),
+            "answer_relevancy": _get("answer_relevancy"),
         }
         avg = sum(metrics.values()) / len(metrics)
         worst_metric = min(metrics, key=metrics.get)
@@ -106,8 +109,9 @@ def failure_analysis(eval_results: list[EvalResult], bottom_n: int = 10) -> list
     results = []
     for avg, r, worst_metric, worst_score in bottom:
         diagnosis, suggested_fix = diagnostic_tree[worst_metric]
+        question = r["question"] if isinstance(r, dict) else r.question
         results.append({
-            "question": r.question,
+            "question": question,
             "worst_metric": worst_metric,
             "score": worst_score,
             "avg_score": avg,
