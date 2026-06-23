@@ -5,3 +5,5 @@ __pycache__/
 logs/
 *.sqlite3
 pageindex_doc_ids.json
+*embeddings_cache.json
+*triples_cache.json
