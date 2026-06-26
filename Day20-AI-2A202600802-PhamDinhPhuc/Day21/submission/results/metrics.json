@@ -1,0 +1,66 @@
+{
+  "base_perplexity": NaN,
+  "experiments": {
+    "r16": {
+      "tag": "r16",
+      "label": "r=16 (baseline q,v)",
+      "group": "rank",
+      "rank": 16,
+      "alpha": 32,
+      "target_modules": "q_proj+v_proj",
+      "dora": false,
+      "trainable_params": 5046272,
+      "train_time_min": 8.414,
+      "peak_vram_gb": 76.67,
+      "eval_loss": 1.33672,
+      "eval_perplexity": 3.8065
+    },
+    "r8": {
+      "tag": "r8",
+      "label": "r=8 (q,v)",
+      "group": "rank",
+      "rank": 8,
+      "alpha": 16,
+      "target_modules": "q_proj+v_proj",
+      "dora": false,
+      "trainable_params": 2523136,
+      "train_time_min": 8.297,
+      "peak_vram_gb": 77.742,
+      "eval_loss": 1.34111,
+      "eval_perplexity": 3.8233
+    },
+    "r64": {
+      "tag": "r64",
+      "label": "r=64 (q,v)",
+      "group": "rank",
+      "rank": 64,
+      "alpha": 128,
+      "target_modules": "q_proj+v_proj",
+      "dora": false,
+      "trainable_params": 20185088,
+      "train_time_min": 8.293,
+      "peak_vram_gb": 79.047,
+      "eval_loss": 1.3363,
+      "eval_perplexity": 3.8049
+    },
+    "r16-all": {
+      "tag": "r16-all",
+      "label": "r=16 ALL-layers",
+      "group": "stretch",
+      "rank": 16,
+      "alpha": 32,
+      "target_modules": "q_proj+k_proj+v_proj+o_proj+gate_proj+up_proj+down_proj",
+      "dora": false,
+      "trainable_params": 40370176,
+      "train_time_min": 9.041,
+      "peak_vram_gb": 69.524,
+      "eval_loss": 1.39522,
+      "eval_perplexity": 4.0358
+    }
+  },
+  "links": {
+    "gguf_local": "/outputs/lab21/gguf/r16-q4_k_m"
+  },
+  "total_train_min": 34.045,
+  "est_cost_usd": 0.851125
+}

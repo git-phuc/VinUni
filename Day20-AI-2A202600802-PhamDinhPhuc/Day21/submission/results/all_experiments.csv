@@ -1,0 +1,5 @@
+tag,label,group,rank,alpha,target_modules,dora,trainable_params,train_time_min,peak_vram_gb,eval_loss,eval_perplexity
+r8,"r=8 (q,v)",rank,8,16,q_proj+v_proj,False,2523136,8.297,77.742,1.34111,3.8233
+r16,"r=16 (baseline q,v)",rank,16,32,q_proj+v_proj,False,5046272,8.414,76.67,1.33672,3.8065
+r64,"r=64 (q,v)",rank,64,128,q_proj+v_proj,False,20185088,8.293,79.047,1.3363,3.8049
+r16-all,r=16 ALL-layers,stretch,16,32,q_proj+k_proj+v_proj+o_proj+gate_proj+up_proj+down_proj,False,40370176,9.041,69.524,1.39522,4.0358

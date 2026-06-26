@@ -1,0 +1,5 @@
+rank,alpha,trainable_params,train_time_min,peak_vram_gb,eval_loss,eval_perplexity
+8,16,2523136,8.297,77.742,1.34111,3.8233
+16,32,5046272,8.414,76.67,1.33672,3.8065
+64,128,20185088,8.293,79.047,1.3363,3.8049
+base,,0,0.0,0.0,,

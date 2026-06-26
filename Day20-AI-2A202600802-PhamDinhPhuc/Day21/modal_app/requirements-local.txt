@@ -1,0 +1,3 @@
+# Chỉ cần trên MÁY LOCAL của bạn để submit job lên Modal.
+# Mọi thư viện nặng (unsloth, torch, trl...) cài trong image trên cloud, KHÔNG cài ở đây.
+modal>=0.64
