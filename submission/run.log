@@ -1,0 +1,105 @@
+======================================================================
+LAB 21 — LoRA/QLoRA Fine-tuning · Modal A100 80GB
+======================================================================
+✓ GPU: NVIDIA A100 80GB PCIe  |  VRAM: 85.1 GB  |  CUDA: 12.8
+✓ Torch: 2.10.0+cu128
+✓ Model: unsloth/Qwen2.5-7B-Instruct-bnb-4bit
+✓ Dataset: 5CD-AI/Vietnamese-alpaca-gpt4-gg-translated (n=2000)
+✓ Push HF Hub (Option B): True | W&B: True | GGUF: True
+✓ HuggingFace logged in as: Phuc-HugigFace
+✓ W&B enabled (project=lab21-lora)
+
+── 1. Dataset preparation ──────────────────────────────────────
+✓ Loaded 2000 samples | columns: ['input_en', 'input_vi', 'instruction_vi', 'output_vi', 'output_en', 'instruction_en']
+✓ Columns dùng: instruction='instruction_vi', input='input_vi', output='output_vi'
+✓ Sau clean/dedup: 1944 samples
+✓ Token length: min=24 p50=169 p95=574 p99=709 max=783
+✓ max_seq_length = 1024 (cap 2048)
+✓ Train: 1749 | Eval: 195
+✓ trl 0.15.2 | transformers 5.5.0
+
+── 2. Base-model perplexity ────────────────────────────────────
+⚠ Base perplexity lỗi: You cannot perform fine-tuning on purely quantized models. Please attach trainable adapters on top of the quantized model to correctly perform fine-tuning. Please see: https://huggingface.co/docs/transformers/peft for more details
+
+========== Train r=16 (baseline q,v)  [r16] ==========
+  trainable=5,046,272 (0.116%)
+  ✓ adapter saved → /outputs/lab21/adapters/r16  | 8.4 min | peak VRAM 76.7 GB
+  ✓ eval loss=1.3367 | perplexity=3.807
+
+── 5. Qualitative comparison (base vs r=16) ────────────────────
+  [1/20] Giải thích khái niệm machine learning cho người mới bắt đầu.
+  [2/20] Viết đoạn code Python tính số Fibonacci thứ n.
+  [3/20] Liệt kê 5 nguyên tắc thiết kế UI/UX.
+  [4/20] Tóm tắt sự khác biệt giữa LoRA và QLoRA.
+  [5/20] Phân biệt prompt engineering, RAG, và fine-tuning.
+  [6/20] Khi nào nên dùng RAG thay vì fine-tuning?
+  [7/20] Giải thích cách hoạt động của Flash Attention.
+  [8/20] Liệt kê 3 câu hỏi phỏng vấn cho ML Engineer junior.
+  [9/20] Cho biết ưu điểm của Transformer so với RNN.
+  [10/20] Cách evaluate performance của một LLM fine-tuned model?
+  [11/20] Giải thích gradient checkpointing là gì.
+  [12/20] Viết một email xin nghỉ phép lịch sự bằng tiếng Việt.
+  [13/20] Tóm tắt nguyên lý hoạt động của QLoRA trong 3 câu.
+  [14/20] Cho ví dụ về overfitting và cách phòng tránh.
+  [15/20] Giải thích sự khác nhau giữa batch size và effective batch s
+  [16/20] Liệt kê các bước chuẩn bị dataset cho fine-tuning.
+  [17/20] Khi nào KHÔNG nên fine-tune một LLM?
+  [18/20] Giải thích perplexity dùng để đo gì.
+  [19/20] Viết hàm Python đảo ngược một chuỗi.
+  [20/20] Cho lời khuyên học Deep Learning cho sinh viên năm nhất.
+  ✓ qualitative_comparison.csv saved
+
+── Option B: push adapter → https://huggingface.co/Phuc-HugigFace/lab21-qwen2.5-7b-vi-r16
+  ⚠ push adapter fail: (Request ID: Root=1-6a3d161c-29a1b6332bd5424c17789818;94ff9afe-d4cd-4431-b452-9b52a0c8ef1f)
+
+403 Forbidden: You don't have the rights to create a model under the namespace "Phuc-HugigFace".
+Cannot access content at: https://huggingface.co/api/repos/create.
+Make sure your token has the correct permissions.
+
+── Stretch: GGUF merge (q4_k_m) ────────────────────────────────
+  ✓ GGUF saved → /outputs/lab21/gguf/r16-q4_k_m
+  ⚠ push GGUF fail: Failed to upload to Hugging Face Hub: (Request ID: Root=1-6a3d17ef-685f7e542026483756abacfb;c0094e9f-b1df-4d37-a39b-845aa887d552)
+
+403 Forbidden: You don't have the rights to create a model under the namespace "Phuc-HugigFace".
+Cannot access content at: https://huggingface.co/api/repos/create.
+Make sure your token has the correct permissions.
+
+========== Train r=8 (q,v)  [r8] ==========
+  trainable=2,523,136 (0.058%)
+  ✓ adapter saved → /outputs/lab21/adapters/r8  | 8.3 min | peak VRAM 77.7 GB
+  ✓ eval loss=1.3411 | perplexity=3.823
+
+========== Train r=64 (q,v)  [r64] ==========
+  trainable=20,185,088 (0.462%)
+  ✓ adapter saved → /outputs/lab21/adapters/r64  | 8.3 min | peak VRAM 79.0 GB
+  ✓ eval loss=1.3363 | perplexity=3.805
+
+========== Train r=16 ALL-layers  [r16-all] ==========
+  trainable=40,370,176 (0.919%)
+  ✓ adapter saved → /outputs/lab21/adapters/r16-all  | 9.0 min | peak VRAM 69.5 GB
+  ✓ eval loss=1.3952 | perplexity=4.036
+
+========== Train r=16 DoRA (q,v)  [r16-dora] ==========
+  trainable=5,160,960 (0.118%)
+⚠ Train r16-dora fail: Query/Key/Value should either all have the same dtype, or (in the quantized case) Key/Value should have dtype torch.int32
+  query.dtype: torch.float32
+  key.dtype  : torch.bfloat16
+  value.dtype: torch.float32
+
+── 6. Summary + report ─────────────────────────────────────────
+
+=== Rank Experiment Summary ===
+rank alpha  trainable_params  train_time_min  peak_vram_gb eval_loss eval_perplexity
+   8    16           2523136           8.297        77.742   1.34111          3.8233
+  16    32           5046272           8.414        76.670   1.33672          3.8065
+  64   128          20185088           8.293        79.047    1.3363          3.8049
+base  None                 0           0.000         0.000      None            None
+  ✓ loss_curve.png saved
+
+✓ Tổng train time: 34.0 phút | est. cost $0.85 @ $1.5/hr
+
+======================================================================
+✅ DONE. Artifacts trong Volume 'lab21-outputs' tại /lab21/
+   adapters/ (r8,r16,r64,r16-all,r16-dora) · results/ · gguf/ · REPORT_DRAFT.md · LINKS.md · logs/run.log
+   Lấy về:  modal volume get lab21-outputs /lab21 ./lab21_output
+======================================================================
