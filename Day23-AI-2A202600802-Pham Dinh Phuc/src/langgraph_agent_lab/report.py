@@ -108,7 +108,7 @@ def render_report(metrics: MetricsReport) -> str:
     summary_rows = [
         "## 1. Team / student",
         "",
-        "- Name: Pham Dinh Phuc (AI-2A202600802)",
+        "- Name: Phạm Đình Phúc - 2A202600802",
         "- Repo/commit: git-phuc/VinUni — Day23 LangGraph Agentic Orchestration lab",
         "- Models: main `gpt-4o-mini`, judge `gpt-5-nano` (LLM-as-judge)",
         "",
