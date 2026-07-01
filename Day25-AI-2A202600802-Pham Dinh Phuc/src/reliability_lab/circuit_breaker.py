@@ -1,0 +1,102 @@
+from __future__ import annotations
+
+import time
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Callable, TypeVar
+
+T = TypeVar("T")
+
+
+class CircuitState(str, Enum):
+    CLOSED = "closed"
+    OPEN = "open"
+    HALF_OPEN = "half_open"
+
+
+class CircuitOpenError(RuntimeError):
+    """Raised when a circuit is open and calls should fail fast."""
+
+
+@dataclass(slots=True)
+class CircuitBreaker:
+    """Circuit breaker skeleton.
+
+    TODO(student): Implement a production-safe state machine:
+    - CLOSED: calls pass through; count failures.
+    - OPEN: fail fast until reset timeout elapses.
+    - HALF_OPEN: allow a probe; close on success or re-open on failure.
+    """
+
+    name: str
+    failure_threshold: int
+    reset_timeout_seconds: float
+    success_threshold: int = 1
+    state: CircuitState = CircuitState.CLOSED
+    failure_count: int = 0
+    success_count: int = 0
+    opened_at: float | None = None
+    transition_log: list[dict[str, str | float]] = field(default_factory=list)
+
+    def allow_request(self) -> bool:
+        """Return whether a request should be attempted.
+
+        - CLOSED → always allow
+        - HALF_OPEN → allow (probe request)
+        - OPEN → check if reset_timeout_seconds has elapsed since opened_at
+          - If elapsed: transition to HALF_OPEN and allow
+          - If not elapsed: deny (return False)
+        """
+        if self.state == CircuitState.CLOSED:
+            return True
+        if self.state == CircuitState.HALF_OPEN:
+            return True
+        # OPEN
+        assert self.opened_at is not None
+        if time.monotonic() - self.opened_at >= self.reset_timeout_seconds:
+            self._transition(CircuitState.HALF_OPEN, "reset_timeout_elapsed")
+            return True
+        return False
+
+    def call(self, fn: Callable[..., T], *args: object, **kwargs: object) -> T:
+        """Call a function through the circuit breaker."""
+        if not self.allow_request():
+            raise CircuitOpenError(f"circuit '{self.name}' is open")
+        try:
+            result = fn(*args, **kwargs)
+        except Exception:
+            self.record_failure()
+            raise
+        self.record_success()
+        return result
+
+    def record_success(self) -> None:
+        """Record a successful call."""
+        self.failure_count = 0
+        self.success_count += 1
+        if self.state == CircuitState.HALF_OPEN and self.success_count >= self.success_threshold:
+            self._transition(CircuitState.CLOSED, "probe_success")
+            self.success_count = 0
+
+    def record_failure(self) -> None:
+        """Record a failed call.
+
+        IMPORTANT: HALF_OPEN and threshold cases need DIFFERENT reasons
+        and must be handled separately (if/elif, not combined with or).
+        """
+        self.failure_count += 1
+        self.success_count = 0
+        if self.state == CircuitState.HALF_OPEN:
+            self._transition(CircuitState.OPEN, "probe_failure")
+            self.opened_at = time.monotonic()
+        elif self.failure_count >= self.failure_threshold:
+            self._transition(CircuitState.OPEN, "failure_threshold_reached")
+            self.opened_at = time.monotonic()
+
+    def _transition(self, new_state: CircuitState, reason: str) -> None:
+        if self.state == new_state:
+            return
+        self.transition_log.append(
+            {"from": self.state.value, "to": new_state.value, "reason": reason, "ts": time.time()}
+        )
+        self.state = new_state
